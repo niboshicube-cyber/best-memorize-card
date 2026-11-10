@@ -1785,7 +1785,7 @@ function saveNewDeck() {
     saveData();
     renderDeckList();
 
-    startStudy(deck.id);
+    startStudy(deck.id, true);
 }
 
 function openEditModal(deckId) {
@@ -2057,6 +2057,16 @@ function startStudy(
     if (!deck || deck.cards.length === 0) {
         return;
     }
+
+    deck.cards.forEach(card => {
+        if (card.dueAt === undefined || card.dueAt === null || !Number.isFinite(Number(card.dueAt))) {
+            card.dueAt = 0;
+        }
+
+        if (card.phase === undefined || card.phase === null) {
+            card.phase = 1;
+        }
+    });
 
     currentDeckId = deckId;
 
