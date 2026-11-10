@@ -190,6 +190,20 @@ input[type="text"]:focus {
     min-width: 0;
 }
 
+.preview-select {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #7b8495;
+}
+
+.preview-select input {
+    width: 15px;
+    height: 15px;
+}
+
 .preview-label {
     font-size: 10px;
     color: #8a93a5;
@@ -1640,6 +1654,85 @@ function updateEditPreview() {
     );
 }
 
+function swapEditCards(
+    swapAll = false
+) {
+    const input =
+        document.getElementById(
+            "editCardInput"
+        );
+
+    const cards =
+        parseCardText(
+            input.value,
+            "edit"
+        );
+
+    if (cards.length === 0) {
+        return;
+    }
+
+    let indexes = [];
+
+    if (swapAll) {
+        indexes =
+            cards.map(
+                (_, index) =>
+                    index
+            );
+    } else {
+        indexes =
+            [
+                ...document.querySelectorAll(
+                    ".edit-card-select:checked"
+                )
+            ].map(
+                checkbox =>
+                    Number(
+                        checkbox.dataset
+                            .index
+                    )
+            );
+
+        if (indexes.length === 0) {
+            alert(
+                "表裏を入れ替えるカードを選択してください。"
+            );
+
+            return;
+        }
+    }
+
+    indexes.forEach(index => {
+        const front =
+            cards[index].front;
+
+        cards[index].front =
+            cards[index].back;
+
+        cards[index].back =
+            front;
+    });
+
+    const pairDelimiter =
+        getPairDelimiter("edit");
+
+    const cardDelimiter =
+        getCardDelimiter("edit");
+
+    input.value =
+        cards
+            .map(
+                card =>
+                    card.front +
+                    pairDelimiter +
+                    card.back
+            )
+            .join(cardDelimiter);
+
+    updateEditPreview();
+}
+
 function updateCustomInputs(prefix = "") {
     const pairSelectId =
         prefix
@@ -2865,6 +2958,20 @@ document.getElementById(
 ).addEventListener(
     "click",
     saveEditedDeck
+);
+
+document.getElementById(
+    "swapSelectedCardsButton"
+).addEventListener(
+    "click",
+    () => swapEditCards(false)
+);
+
+document.getElementById(
+    "swapAllCardsButton"
+).addEventListener(
+    "click",
+    () => swapEditCards(true)
 );
 
 document.getElementById(
