@@ -1073,6 +1073,27 @@ orange オレンジ"></textarea>
             </div>
 
             <div
+                style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+
+                <button
+                    type="button"
+                    class="secondary"
+                    id="swapSelectedCardsButton"
+                    style="width:auto;padding:10px 13px;">
+                    選択したカードを表裏入れ替え
+                </button>
+
+                <button
+                    type="button"
+                    class="secondary"
+                    id="swapAllCardsButton"
+                    style="width:auto;padding:10px 13px;">
+                    全カードを表裏入れ替え
+                </button>
+
+            </div>
+
+            <div
                 class="preview"
                 id="editPreview">
             </div>
@@ -1143,6 +1164,7 @@ let studyQueue = [];
 let currentCardIndex = 0;
 let editingDeckId = null;
 let deletingDeckId = null;
+let lastCreateDuplicateSignature = "";
 let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
@@ -1463,6 +1485,108 @@ function updateCreatePreview() {
                 "cardInput"
             ).value
         );
+
+    const groups = new Map();
+
+    cards.forEach((card, index) => {
+        const key =
+            card.front +
+            "\u0000" +
+            card.back;
+
+        if (!groups.has(key)) {
+            groups.set(key, []);
+        }
+
+        groups.get(key).push(index);
+    });
+
+    const duplicates =
+        [...groups.entries()]
+            .filter(
+                ([key, indexes]) =>
+                    indexes.length > 1
+            );
+
+    if (duplicates.length === 0) {
+        lastCreateDuplicateSignature = "";
+    } else {
+        const signature =
+            duplicates
+                .map(
+                    ([key, indexes]) =>
+                        key +
+                        "\u0001" +
+                        indexes.length
+                )
+                .join("\u0002");
+
+        if (
+            signature !==
+            lastCreateDuplicateSignature
+        ) {
+            lastCreateDuplicateSignature =
+                signature;
+
+            const [
+                key
+            ] = duplicates[0];
+
+            const [
+                front,
+                back
+            ] = key.split("\u0000");
+
+            const shouldDelete =
+                confirm(
+                    `表「${front}」、裏「${back}」のカードが複数存在します。削除しますか？`
+                );
+
+            if (shouldDelete) {
+                const duplicateIndexes =
+                    new Set(
+                        duplicates
+                            .flatMap(
+                                ([, indexes]) =>
+                                    indexes.slice(1)
+                            )
+                    );
+
+                const pairDelimiter =
+                    getPairDelimiter();
+
+                const cardDelimiter =
+                    getCardDelimiter();
+
+                const newText =
+                    cards
+                        .filter(
+                            (_, index) =>
+                                !duplicateIndexes.has(
+                                    index
+                                )
+                        )
+                        .map(
+                            card =>
+                                card.front +
+                                pairDelimiter +
+                                card.back
+                        )
+                        .join(cardDelimiter);
+
+                document.getElementById(
+                    "cardInput"
+                ).value = newText;
+
+                lastCreateDuplicateSignature =
+                    "";
+
+                updateCreatePreview();
+
+                return;
+            }
+        }
+    }
 
     renderPreview(
         "preview",
