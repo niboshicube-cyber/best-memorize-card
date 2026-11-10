@@ -24,14 +24,6 @@ body {
     overscroll-behavior: none;
 }
 
-button, textarea, input, select {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
 .app {
     width: 100%;
     max-width: 760px;
@@ -236,12 +228,12 @@ input[type="text"]:focus {
     margin-bottom: 12px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 14px;
+    gap: 12px;
 }
 
 .deck-info {
     min-width: 0;
+    flex: 1;
 }
 
 .deck-name {
@@ -256,13 +248,37 @@ input[type="text"]:focus {
     color: #7b8495;
 }
 
-.deck-button {
+.deck-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
     flex-shrink: 0;
+}
+
+.deck-button {
     border: 0;
     border-radius: 10px;
-    padding: 10px 14px;
+    padding: 10px 13px;
     background: #315bdc;
     color: white;
+    font-weight: 700;
+}
+
+.edit-button {
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #eef2f8;
+    color: #172033;
+    font-weight: 700;
+}
+
+.delete-button {
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #fff0f0;
+    color: #c43b3b;
     font-weight: 700;
 }
 
@@ -321,7 +337,7 @@ input[type="text"]:focus {
     height: 100%;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.45s ease;
+    transition: transform 0.18s ease;
     cursor: pointer;
 }
 
@@ -418,7 +434,9 @@ input[type="text"]:focus {
 
 .modal-box {
     width: 100%;
-    max-width: 420px;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow: auto;
     background: white;
     border-radius: 20px;
     padding: 22px;
@@ -435,6 +453,45 @@ input[type="text"]:focus {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-top: 16px;
+}
+
+.edit-card {
+    border: 1px solid #e1e5ed;
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: #fafbfe;
+}
+
+.edit-card-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.edit-card input {
+    min-width: 0;
+}
+
+.remove-card-button {
+    border: 0;
+    background: #fff0f0;
+    color: #c43b3b;
+    border-radius: 9px;
+    padding: 10px;
+    font-weight: 800;
+}
+
+.add-card-button {
+    width: 100%;
+    border: 1px dashed #bdc6d8;
+    background: #f8faff;
+    color: #315bdc;
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 800;
+    margin-top: 4px;
 }
 
 .stats {
@@ -463,6 +520,16 @@ input[type="text"]:focus {
     margin-top: 3px;
 }
 
+.danger {
+    width: 100%;
+    border: 0;
+    border-radius: 14px;
+    background: #fff0f0;
+    color: #c43b3b;
+    padding: 14px;
+    font-weight: 800;
+}
+
 @media (max-width: 520px) {
     .screen {
         padding-left: 14px;
@@ -484,6 +551,24 @@ input[type="text"]:focus {
     .card-area {
         height: 58vh;
         min-height: 330px;
+    }
+
+    .deck {
+        align-items: flex-start;
+    }
+
+    .deck-actions {
+        flex-direction: column;
+    }
+
+    .deck-button,
+    .edit-button,
+    .delete-button {
+        width: 100%;
+    }
+
+    .edit-card-row {
+        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -654,6 +739,40 @@ orange オレンジ"></textarea>
     </div>
 </div>
 
+<div class="modal" id="editModal">
+    <div class="modal-box">
+        <div class="modal-title">カード束を編集</div>
+
+        <div class="section">
+            <div class="section-title">カード束の名前</div>
+            <input id="editDeckName" type="text" maxlength="50">
+        </div>
+
+        <div class="section">
+            <div class="section-title">カード</div>
+            <div id="editCardsList"></div>
+            <button class="add-card-button" id="addCardButton">＋ カードを追加</button>
+        </div>
+
+        <div class="modal-buttons">
+            <button class="secondary" id="cancelEditButton">キャンセル</button>
+            <button class="primary" id="saveEditButton">保存</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="deleteModal">
+    <div class="modal-box">
+        <div class="modal-title">カード束を削除</div>
+        <div id="deleteText"></div>
+
+        <div class="modal-buttons">
+            <button class="secondary" id="cancelDeleteButton">キャンセル</button>
+            <button class="danger" id="confirmDeleteButton">削除する</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const STORAGE_KEY = "bestMemorizeCardDataV1";
 
@@ -666,6 +785,8 @@ let studyQueue = [];
 let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
+let editingDeckId = null;
+let deletingDeckId = null;
 
 const screens = {
     home: document.getElementById("homeScreen"),
@@ -817,6 +938,7 @@ function renderDeckList() {
                 新しいカード束を作ってみよう。
             </div>
         `;
+        updateStats();
         return;
     }
 
@@ -834,11 +956,24 @@ function renderDeckList() {
                 <div class="deck-name">${escapeHtml(deck.name)}</div>
                 <div class="deck-count">${total}枚　・　平均Phase ${total ? (phases / total).toFixed(1) : 0}</div>
             </div>
-            <button class="deck-button">暗記する</button>
+
+            <div class="deck-actions">
+                <button class="edit-button">編集</button>
+                <button class="delete-button">削除</button>
+                <button class="deck-button">暗記</button>
+            </div>
         `;
 
         div.querySelector(".deck-button").addEventListener("click", () => {
             startStudy(deck.id);
+        });
+
+        div.querySelector(".edit-button").addEventListener("click", () => {
+            openEditModal(deck.id);
+        });
+
+        div.querySelector(".delete-button").addEventListener("click", () => {
+            openDeleteModal(deck.id);
         });
 
         list.appendChild(div);
@@ -942,6 +1077,127 @@ function saveNewDeck() {
     renderDeckList();
 
     startStudy(deck.id);
+}
+
+function openEditModal(deckId) {
+    const deck = appData.decks.find(d => d.id === deckId);
+    if (!deck) return;
+
+    editingDeckId = deckId;
+
+    document.getElementById("editDeckName").value = deck.name;
+
+    const list = document.getElementById("editCardsList");
+    list.innerHTML = "";
+
+    deck.cards.forEach(card => {
+        addEditCardRow(card.front, card.back, card.id, card.phase, card.reviews);
+    });
+
+    document.getElementById("editModal").classList.add("show");
+}
+
+function addEditCardRow(front = "", back = "", id = "", phase = 1, reviews = 0) {
+    const list = document.getElementById("editCardsList");
+
+    const div = document.createElement("div");
+    div.className = "edit-card";
+
+    div.dataset.id = id;
+    div.dataset.phase = phase;
+    div.dataset.reviews = reviews;
+
+    div.innerHTML = `
+        <div class="edit-card-row">
+            <input type="text" class="edit-front" placeholder="表" value="${escapeHtml(front)}">
+            <input type="text" class="edit-back" placeholder="裏" value="${escapeHtml(back)}">
+            <button class="remove-card-button">削除</button>
+        </div>
+    `;
+
+    div.querySelector(".remove-card-button").addEventListener("click", () => {
+        div.remove();
+    });
+
+    list.appendChild(div);
+}
+
+function saveEditedDeck() {
+    const deck = appData.decks.find(d => d.id === editingDeckId);
+    if (!deck) return;
+
+    const name = document.getElementById("editDeckName").value.trim();
+
+    if (!name) {
+        alert("カード束の名前を入力してください。");
+        return;
+    }
+
+    const rows = [...document.querySelectorAll("#editCardsList .edit-card")];
+    const newCards = [];
+
+    for (const row of rows) {
+        const front = row.querySelector(".edit-front").value.trim();
+        const back = row.querySelector(".edit-back").value.trim();
+
+        if (!front || !back) {
+            alert("表と裏の両方を入力してください。");
+            return;
+        }
+
+        newCards.push({
+            id: row.dataset.id || `${Date.now()}_${Math.random().toString(36).slice(2)}`,
+            front,
+            back,
+            phase: Number(row.dataset.phase) || 1,
+            reviews: Number(row.dataset.reviews) || 0
+        });
+    }
+
+    if (newCards.length === 0) {
+        alert("カードを1枚以上残してください。");
+        return;
+    }
+
+    deck.name = name;
+    deck.cards = newCards;
+
+    saveData();
+
+    document.getElementById("editModal").classList.remove("show");
+
+    renderDeckList();
+}
+
+function openDeleteModal(deckId) {
+    const deck = appData.decks.find(d => d.id === deckId);
+    if (!deck) return;
+
+    deletingDeckId = deckId;
+
+    document.getElementById("deleteText").innerHTML = `
+        <div style="font-size:15px;line-height:1.7;">
+            「<strong>${escapeHtml(deck.name)}</strong>」を削除しますか？
+        </div>
+        <div style="font-size:13px;color:#7b8495;margin-top:8px;">
+            ${deck.cards.length}枚のカードと学習履歴も削除されます。
+        </div>
+    `;
+
+    document.getElementById("deleteModal").classList.add("show");
+}
+
+function confirmDeleteDeck() {
+    if (!deletingDeckId) return;
+
+    appData.decks = appData.decks.filter(deck => deck.id !== deletingDeckId);
+
+    saveData();
+    renderDeckList();
+
+    deletingDeckId = null;
+
+    document.getElementById("deleteModal").classList.remove("show");
 }
 
 function weightedShuffle(cards) {
@@ -1125,6 +1381,22 @@ document.getElementById("cardDelimiter").addEventListener("change", () => {
 document.getElementById("pairCustom").addEventListener("input", updatePreview);
 
 document.getElementById("cardCustom").addEventListener("input", updatePreview);
+
+document.getElementById("addCardButton").addEventListener("click", () => {
+    addEditCardRow();
+});
+
+document.getElementById("saveEditButton").addEventListener("click", saveEditedDeck);
+
+document.getElementById("cancelEditButton").addEventListener("click", () => {
+    document.getElementById("editModal").classList.remove("show");
+});
+
+document.getElementById("confirmDeleteButton").addEventListener("click", confirmDeleteDeck);
+
+document.getElementById("cancelDeleteButton").addEventListener("click", () => {
+    document.getElementById("deleteModal").classList.remove("show");
+});
 
 const cardArea = document.getElementById("cardArea");
 
