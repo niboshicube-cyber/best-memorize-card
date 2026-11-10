@@ -563,7 +563,7 @@ input[type="text"]:focus {
 
 <header>
     <div class="logo">最高の暗記カード</div>
-    <button class="header-button" id="homeButton">ホーム</button>
+    <button type="button" class="header-button" id="homeButton">ホーム</button>
 </header>
 
 <section class="screen active" id="homeScreen">
@@ -591,7 +591,11 @@ input[type="text"]:focus {
         </div>
     </div>
 
-    <button class="primary" id="createButton">
+    <button
+        type="button"
+        class="primary"
+        id="createButton"
+        onclick="startCreate()">
         ＋ 新しいカード束を作る
     </button>
 
@@ -617,7 +621,9 @@ input[type="text"]:focus {
             カードの内容
         </div>
 
-        <textarea id="cardInput" placeholder="apple りんご
+        <textarea
+            id="cardInput"
+            placeholder="apple りんご
 banana バナナ
 orange オレンジ"></textarea>
 
@@ -727,13 +733,19 @@ orange オレンジ"></textarea>
 
     </div>
 
-    <button class="primary" id="makeCardsButton">
+    <button
+        type="button"
+        class="primary"
+        id="makeCardsButton">
         カードを作成する
     </button>
 
     <div style="height:10px"></div>
 
-    <button class="secondary" id="cancelCreateButton">
+    <button
+        type="button"
+        class="secondary"
+        id="cancelCreateButton">
         戻る
     </button>
 
@@ -772,13 +784,19 @@ orange オレンジ"></textarea>
 
     </div>
 
-    <button class="primary" id="saveDeckButton">
+    <button
+        type="button"
+        class="primary"
+        id="saveDeckButton">
         保存して暗記する
     </button>
 
     <div style="height:10px"></div>
 
-    <button class="secondary" id="cancelNameButton">
+    <button
+        type="button"
+        class="secondary"
+        id="cancelNameButton">
         戻る
     </button>
 
@@ -803,6 +821,7 @@ orange オレンジ"></textarea>
         </div>
 
         <button
+            type="button"
             class="header-button"
             id="exitStudyButton">
             終了
@@ -860,12 +879,14 @@ orange オレンジ"></textarea>
         <div class="swipe-buttons">
 
             <button
+                type="button"
                 class="swipe-button unknown"
                 id="unknownButton">
                 ← わからない
             </button>
 
             <button
+                type="button"
                 class="swipe-button known"
                 id="knownButton">
                 わかった →
@@ -897,12 +918,14 @@ orange オレンジ"></textarea>
         <div class="modal-buttons">
 
             <button
+                type="button"
                 class="secondary"
                 id="completeHomeButton">
                 ホームへ
             </button>
 
             <button
+                type="button"
                 class="primary"
                 id="completeAgainButton">
                 全カードを復習
@@ -1060,12 +1083,14 @@ orange オレンジ"></textarea>
         <div class="modal-buttons">
 
             <button
+                type="button"
                 class="secondary"
                 id="cancelEditButton">
                 キャンセル
             </button>
 
             <button
+                type="button"
                 class="primary"
                 id="saveEditButton">
                 保存
@@ -1090,12 +1115,14 @@ orange オレンジ"></textarea>
         <div class="modal-buttons">
 
             <button
+                type="button"
                 class="secondary"
                 id="cancelDeleteButton">
                 キャンセル
             </button>
 
             <button
+                type="button"
                 class="danger"
                 id="confirmDeleteButton">
                 削除する
@@ -1147,7 +1174,10 @@ function loadData() {
 
             if (parsed && Array.isArray(parsed.decks)) {
                 normalizeData(parsed);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    JSON.stringify(parsed)
+                );
                 return parsed;
             }
         }
@@ -1160,7 +1190,9 @@ function loadData() {
 
 function normalizeData(data) {
     data.decks.forEach(deck => {
-        deck.cards = Array.isArray(deck.cards) ? deck.cards : [];
+        deck.cards = Array.isArray(deck.cards)
+            ? deck.cards
+            : [];
 
         deck.cards.forEach(card => {
             card.phase = Number(card.phase) || 1;
@@ -1172,7 +1204,9 @@ function normalizeData(data) {
                 card.id =
                     Date.now() +
                     "_" +
-                    Math.random().toString(36).slice(2);
+                    Math.random()
+                        .toString(36)
+                        .slice(2);
             }
         });
     });
@@ -1329,7 +1363,9 @@ function renderPreview(
     cards
 ) {
     const preview =
-        document.getElementById(previewId);
+        document.getElementById(
+            previewId
+        );
 
     preview.innerHTML = "";
 
@@ -1505,15 +1541,21 @@ function renderDeckList() {
 
                 <div class="deck-actions">
 
-                    <button class="edit-button">
+                    <button
+                        type="button"
+                        class="edit-button">
                         編集
                     </button>
 
-                    <button class="delete-button">
+                    <button
+                        type="button"
+                        class="delete-button">
                         削除
                     </button>
 
-                    <button class="deck-button">
+                    <button
+                        type="button"
+                        class="deck-button">
                         暗記
                     </button>
 
@@ -2043,6 +2085,7 @@ function showNoDueCards(deck) {
             </div>
 
             <button
+                type="button"
                 class="primary"
                 id="studyAllButton">
                 全カードを今すぐ復習
@@ -2051,6 +2094,7 @@ function showNoDueCards(deck) {
             <div style="height:10px"></div>
 
             <button
+                type="button"
                 class="secondary"
                 id="studyHomeButton">
                 ホームへ
@@ -2348,13 +2392,6 @@ function restartCurrentDeck() {
         true
     );
 }
-
-document.getElementById(
-    "createButton"
-).addEventListener(
-    "click",
-    startCreate
-);
 
 document.getElementById(
     "homeButton"
