@@ -2260,48 +2260,73 @@ function showCurrentCard() {
     const card =
         item.card;
 
-    document.getElementById(
-        "frontText"
-    ).textContent =
-        card.front;
+    const flashcard =
+        document.getElementById(
+            "flashcard"
+        );
 
-    document.getElementById(
-        "backText"
-    ).textContent =
-        card.back;
+    const updateCard =
+        () => {
+            document.getElementById(
+                "frontText"
+            ).textContent =
+                card.front;
 
-    document.getElementById(
-        "flashcard"
-    ).classList.remove(
-        "flipped"
-    );
+            document.getElementById(
+                "backText"
+            ).textContent =
+                card.back;
 
-    const remaining =
-        studyQueue.length -
-        currentCardIndex;
+            flashcard.classList.remove(
+                "flipped"
+            );
 
-    document.getElementById(
-        "progressBar"
-    ).style.width =
-        `${Math.min(
-            100,
-            (currentCardIndex /
-                Math.max(
-                    1,
-                    studyQueue.length
-                )) *
-                100
-        )}%`;
+            const remaining =
+                studyQueue.length -
+                currentCardIndex;
 
-    document.getElementById(
-        "studyPhase"
-    ).textContent =
-        `Phase ${card.phase}`;
+            document.getElementById(
+                "progressBar"
+            ).style.width =
+                `${Math.min(
+                    100,
+                    (currentCardIndex /
+                        Math.max(
+                            1,
+                            studyQueue.length
+                        )) *
+                        100
+                )}%`;
 
-    document.getElementById(
-        "studyMessage"
-    ).textContent =
-        `${currentCardIndex + 1} / ${studyQueue.length}　残り ${remaining}枚`;
+            document.getElementById(
+                "studyPhase"
+            ).textContent =
+                `Phase ${card.phase}`;
+
+            document.getElementById(
+                "studyMessage"
+            ).textContent =
+                `${currentCardIndex + 1} / ${studyQueue.length}　残り ${remaining}枚`;
+        };
+
+    if (
+        flashcard.classList.contains(
+            "flipped"
+        )
+    ) {
+        flashcard.classList.remove(
+            "flipped"
+        );
+
+        setTimeout(
+            updateCard,
+            170
+        );
+
+        return;
+    }
+
+    updateCard();
 }
 
 function flipCard() {
@@ -2311,6 +2336,36 @@ function flipCard() {
         "flipped"
     );
 }
+
+document.addEventListener(
+    "keydown",
+    event => {
+        if (
+            !document.getElementById(
+                "studyScreen"
+            ).classList.contains("active")
+        ) {
+            return;
+        }
+
+        if (event.code === "Space") {
+            event.preventDefault();
+            flipCard();
+            return;
+        }
+
+        if (event.key === "ArrowRight") {
+            event.preventDefault();
+            rateCard(true);
+            return;
+        }
+
+        if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            rateCard(false);
+        }
+    }
+);
 
 function getIntervalMs(phase) {
     const intervals = {
