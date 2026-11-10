@@ -595,10 +595,9 @@ input[type="text"]:focus {
         type="button"
         class="primary"
         id="createButton"
-        onclick="startCreate()">
+        onclick="showScreen('create'); startCreate();">
         ＋ 新しいカード束を作る
     </button>
-
     <div style="height:20px"></div>
 
     <h2>カード束</h2>
@@ -1625,6 +1624,8 @@ function updateStats() {
 }
 
 function startCreate() {
+    showScreen("create");
+
     document.getElementById(
         "cardInput"
     ).value = "";
@@ -1647,10 +1648,8 @@ function startCreate() {
 
     updateCustomInputs();
     updateCreatePreview();
-
-    showScreen("create");
 }
-
+    
 function prepareSave() {
     createdCards =
         parseCardText(
