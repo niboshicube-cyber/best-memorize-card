@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>BEST MEMORIZE CARD</title>
+<title>最高の暗記カード</title>
+
 <style>
 * {
     box-sizing: border-box;
@@ -24,12 +25,18 @@ body {
     overscroll-behavior: none;
 }
 
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
 .app {
     width: 100%;
     max-width: 760px;
     margin: 0 auto;
     min-height: 100vh;
-    background: #f5f7fb;
 }
 
 header {
@@ -57,7 +64,7 @@ header {
     color: #172033;
     border-radius: 10px;
     padding: 9px 14px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .screen {
@@ -255,31 +262,28 @@ input[type="text"]:focus {
     flex-shrink: 0;
 }
 
-.deck-button {
-    border: 0;
-    border-radius: 10px;
-    padding: 10px 13px;
-    background: #315bdc;
-    color: white;
-    font-weight: 700;
-}
-
-.edit-button {
-    border: 0;
-    border-radius: 10px;
-    padding: 10px 12px;
-    background: #eef2f8;
-    color: #172033;
-    font-weight: 700;
-}
-
+.deck-button,
+.edit-button,
 .delete-button {
     border: 0;
     border-radius: 10px;
     padding: 10px 12px;
+    font-weight: 700;
+}
+
+.deck-button {
+    background: #315bdc;
+    color: white;
+}
+
+.edit-button {
+    background: #eef2f8;
+    color: #172033;
+}
+
+.delete-button {
     background: #fff0f0;
     color: #c43b3b;
-    font-weight: 700;
 }
 
 .empty {
@@ -289,6 +293,32 @@ input[type="text"]:focus {
     background: white;
     border-radius: 16px;
     border: 1px solid #e5e8ef;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.stat {
+    background: white;
+    border: 1px solid #e5e8ef;
+    border-radius: 13px;
+    padding: 12px 8px;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.stat-label {
+    font-size: 10px;
+    color: #7b8495;
+    margin-top: 3px;
 }
 
 .study-top {
@@ -306,6 +336,7 @@ input[type="text"]:focus {
 .phase-info {
     font-weight: 800;
     color: #315bdc;
+    margin-top: 3px;
 }
 
 .progress {
@@ -337,7 +368,7 @@ input[type="text"]:focus {
     height: 100%;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.18s ease;
+    transition: transform 0.16s ease;
     cursor: pointer;
 }
 
@@ -367,7 +398,7 @@ input[type="text"]:focus {
 }
 
 .card-text {
-    font-size: clamp(28px, 8vw, 54px);
+    font-size: clamp(22px, 6vw, 42px);
     font-weight: 700;
     line-height: 1.35;
     word-break: break-word;
@@ -417,6 +448,27 @@ input[type="text"]:focus {
     min-height: 20px;
 }
 
+.study-empty {
+    background: white;
+    border: 1px solid #e5e8ef;
+    border-radius: 20px;
+    padding: 28px 20px;
+    text-align: center;
+}
+
+.study-empty-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.study-empty-text {
+    color: #697386;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
 .modal {
     position: fixed;
     inset: 0;
@@ -434,7 +486,7 @@ input[type="text"]:focus {
 
 .modal-box {
     width: 100%;
-    max-width: 520px;
+    max-width: 560px;
     max-height: 90vh;
     overflow: auto;
     background: white;
@@ -453,71 +505,6 @@ input[type="text"]:focus {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-top: 16px;
-}
-
-.edit-card {
-    border: 1px solid #e1e5ed;
-    border-radius: 14px;
-    padding: 12px;
-    margin-bottom: 10px;
-    background: #fafbfe;
-}
-
-.edit-card-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 8px;
-    align-items: center;
-}
-
-.edit-card input {
-    min-width: 0;
-}
-
-.remove-card-button {
-    border: 0;
-    background: #fff0f0;
-    color: #c43b3b;
-    border-radius: 9px;
-    padding: 10px;
-    font-weight: 800;
-}
-
-.add-card-button {
-    width: 100%;
-    border: 1px dashed #bdc6d8;
-    background: #f8faff;
-    color: #315bdc;
-    border-radius: 12px;
-    padding: 12px;
-    font-weight: 800;
-    margin-top: 4px;
-}
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-bottom: 16px;
-}
-
-.stat {
-    background: white;
-    border: 1px solid #e5e8ef;
-    border-radius: 13px;
-    padding: 12px 8px;
-    text-align: center;
-}
-
-.stat-number {
-    font-size: 20px;
-    font-weight: 800;
-}
-
-.stat-label {
-    font-size: 10px;
-    color: #7b8495;
-    margin-top: 3px;
 }
 
 .danger {
@@ -566,26 +553,25 @@ input[type="text"]:focus {
     .delete-button {
         width: 100%;
     }
-
-    .edit-card-row {
-        grid-template-columns: 1fr;
-    }
 }
 </style>
 </head>
+
 <body>
 
 <div class="app">
 
 <header>
-    <div class="logo">BEST MEMORIZE CARD</div>
+    <div class="logo">最高の暗記カード</div>
     <button class="header-button" id="homeButton">ホーム</button>
 </header>
 
 <section class="screen active" id="homeScreen">
+
     <h1>暗記カード</h1>
+
     <div class="subtitle">
-        カードをまとめて作って、効率よく覚えよう。
+        覚えられていないカードを重点的に復習しよう。
     </div>
 
     <div class="stats">
@@ -593,200 +579,547 @@ input[type="text"]:focus {
             <div class="stat-number" id="deckCount">0</div>
             <div class="stat-label">カード束</div>
         </div>
+
         <div class="stat">
             <div class="stat-number" id="cardCount">0</div>
             <div class="stat-label">カード</div>
         </div>
+
         <div class="stat">
             <div class="stat-number" id="phaseCount">0</div>
-            <div class="stat-label">学習中</div>
+            <div class="stat-label">復習対象</div>
         </div>
     </div>
 
-    <button class="primary" id="createButton">＋ 新しいカード束を作る</button>
+    <button class="primary" id="createButton">
+        ＋ 新しいカード束を作る
+    </button>
 
     <div style="height:20px"></div>
 
     <h2>カード束</h2>
+
     <div id="deckList"></div>
+
 </section>
 
 <section class="screen" id="createScreen">
+
     <h1>カードを作る</h1>
+
     <div class="subtitle">
         文章をまとめて入力し、区切り方を指定してください。
     </div>
 
     <div class="section">
-        <div class="section-title">カードの内容</div>
+
+        <div class="section-title">
+            カードの内容
+        </div>
+
         <textarea id="cardInput" placeholder="apple りんご
 banana バナナ
 orange オレンジ"></textarea>
+
     </div>
 
     <div class="section">
-        <div class="section-title">区切り設定</div>
+
+        <div class="section-title">
+            区切り設定
+        </div>
 
         <div class="setting-row">
+
             <div class="setting">
-                <label>問題と答えの区切り</label>
+
+                <label>
+                    問題と答えの区切り
+                </label>
+
                 <select id="pairDelimiter">
-                    <option value=" ">半角スペース</option>
-                    <option value="　">全角スペース</option>
-                    <option value=",">カンマ ,</option>
-                    <option value="|">縦線 |</option>
-                    <option value="→">矢印 →</option>
-                    <option value="custom">自分で指定</option>
+
+                    <option value=" ">
+                        半角スペース
+                    </option>
+
+                    <option value="　">
+                        全角スペース
+                    </option>
+
+                    <option value=",">
+                        カンマ ,
+                    </option>
+
+                    <option value="|">
+                        縦線 |
+                    </option>
+
+                    <option value="→">
+                        矢印 →
+                    </option>
+
+                    <option value="custom">
+                        自分で指定
+                    </option>
+
                 </select>
-                <input class="custom-input" id="pairCustom" type="text" placeholder="例：=">
+
+                <input
+                    class="custom-input"
+                    id="pairCustom"
+                    type="text"
+                    placeholder="例：="
+                >
+
             </div>
 
             <div class="setting">
-                <label>カードの区切り</label>
+
+                <label>
+                    カードの区切り
+                </label>
+
                 <select id="cardDelimiter">
-                    <option value="newline">改行</option>
-                    <option value="double-newline">改行2回</option>
-                    <option value=",">カンマ ,</option>
-                    <option value="|">縦線 |</option>
-                    <option value="custom">自分で指定</option>
+
+                    <option value="newline">
+                        改行
+                    </option>
+
+                    <option value="double-newline">
+                        改行2回
+                    </option>
+
+                    <option value=",">
+                        カンマ ,
+                    </option>
+
+                    <option value="|">
+                        縦線 |
+                    </option>
+
+                    <option value="custom">
+                        自分で指定
+                    </option>
+
                 </select>
-                <input class="custom-input" id="cardCustom" type="text" placeholder="例：;">
+
+                <input
+                    class="custom-input"
+                    id="cardCustom"
+                    type="text"
+                    placeholder="例：;"
+                >
+
             </div>
+
         </div>
+
     </div>
 
     <div class="section">
-        <div class="section-title">プレビュー</div>
+
+        <div class="section-title">
+            プレビュー
+        </div>
+
         <div class="preview" id="preview"></div>
+
     </div>
 
-    <button class="primary" id="makeCardsButton">カードを作成する</button>
+    <button class="primary" id="makeCardsButton">
+        カードを作成する
+    </button>
 
     <div style="height:10px"></div>
 
-    <button class="secondary" id="cancelCreateButton">戻る</button>
+    <button class="secondary" id="cancelCreateButton">
+        戻る
+    </button>
+
 </section>
 
 <section class="screen" id="nameScreen">
+
     <h1>カード束を保存</h1>
+
     <div class="subtitle">
         このカード束に名前をつけてください。
     </div>
 
     <div class="section">
-        <div class="section-title">カード束の名前</div>
-        <input id="deckNameInput" type="text" maxlength="50" placeholder="例：英単語">
+
+        <div class="section-title">
+            カード束の名前
+        </div>
+
+        <input
+            id="deckNameInput"
+            type="text"
+            maxlength="50"
+            placeholder="例：英単語"
+        >
+
     </div>
 
     <div class="section">
-        <div class="section-title">作成されるカード</div>
+
+        <div class="section-title">
+            作成されるカード
+        </div>
+
         <div id="createdCardSummary"></div>
+
     </div>
 
-    <button class="primary" id="saveDeckButton">保存して暗記する</button>
+    <button class="primary" id="saveDeckButton">
+        保存して暗記する
+    </button>
 
     <div style="height:10px"></div>
 
-    <button class="secondary" id="cancelNameButton">戻る</button>
+    <button class="secondary" id="cancelNameButton">
+        戻る
+    </button>
+
 </section>
 
 <section class="screen" id="studyScreen">
+
     <div class="study-top">
+
         <div>
-            <div class="study-info" id="studyDeckName"></div>
-            <div class="phase-info" id="studyPhase"></div>
+
+            <div
+                class="study-info"
+                id="studyDeckName">
+            </div>
+
+            <div
+                class="phase-info"
+                id="studyPhase">
+            </div>
+
         </div>
-        <button class="header-button" id="exitStudyButton">終了</button>
+
+        <button
+            class="header-button"
+            id="exitStudyButton">
+            終了
+        </button>
+
     </div>
 
     <div class="progress">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
 
-    <div class="card-area" id="cardArea">
-        <div class="flashcard" id="flashcard">
-            <div class="card-face">
-                <div class="card-text" id="frontText"></div>
-                <div class="card-hint">タップして答えを見る</div>
-            </div>
-
-            <div class="card-face card-back">
-                <div class="card-text" id="backText"></div>
-                <div class="card-hint">右＝わかった　左＝わからない</div>
-            </div>
+        <div
+            class="progress-bar"
+            id="progressBar">
         </div>
+
     </div>
 
-    <div class="swipe-buttons">
-        <button class="swipe-button unknown" id="unknownButton">← わからない</button>
-        <button class="swipe-button known" id="knownButton">わかった →</button>
+    <div id="studyContent">
+
+        <div class="card-area" id="cardArea">
+
+            <div
+                class="flashcard"
+                id="flashcard">
+
+                <div class="card-face">
+
+                    <div
+                        class="card-text"
+                        id="frontText">
+                    </div>
+
+                    <div class="card-hint">
+                        タップして答えを見る
+                    </div>
+
+                </div>
+
+                <div class="card-face card-back">
+
+                    <div
+                        class="card-text"
+                        id="backText">
+                    </div>
+
+                    <div class="card-hint">
+                        右＝わかった　左＝わからない
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="swipe-buttons">
+
+            <button
+                class="swipe-button unknown"
+                id="unknownButton">
+                ← わからない
+            </button>
+
+            <button
+                class="swipe-button known"
+                id="knownButton">
+                わかった →
+            </button>
+
+        </div>
+
+        <div
+            class="study-message"
+            id="studyMessage">
+        </div>
+
     </div>
 
-    <div class="study-message" id="studyMessage"></div>
 </section>
 
 </div>
 
 <div class="modal" id="completeModal">
+
     <div class="modal-box">
-        <div class="modal-title">今回の学習が終了しました</div>
+
+        <div class="modal-title">
+            今回の復習が終了しました
+        </div>
+
         <div id="completeText"></div>
 
         <div class="modal-buttons">
-            <button class="secondary" id="completeHomeButton">ホームへ</button>
-            <button class="primary" id="completeAgainButton">もう一度</button>
+
+            <button
+                class="secondary"
+                id="completeHomeButton">
+                ホームへ
+            </button>
+
+            <button
+                class="primary"
+                id="completeAgainButton">
+                全カードを復習
+            </button>
+
         </div>
+
     </div>
+
 </div>
 
 <div class="modal" id="editModal">
-    <div class="modal-box">
-        <div class="modal-title">カード束を編集</div>
 
-        <div class="section">
-            <div class="section-title">カード束の名前</div>
-            <input id="editDeckName" type="text" maxlength="50">
+    <div class="modal-box">
+
+        <div class="modal-title">
+            カード束を編集
         </div>
 
         <div class="section">
-            <div class="section-title">カード</div>
-            <div id="editCardsList"></div>
-            <button class="add-card-button" id="addCardButton">＋ カードを追加</button>
+
+            <div class="section-title">
+                カード束の名前
+            </div>
+
+            <input
+                id="editDeckName"
+                type="text"
+                maxlength="50"
+            >
+
+        </div>
+
+        <div class="section">
+
+            <div class="section-title">
+                カードの内容
+            </div>
+
+            <textarea
+                id="editCardInput"
+                placeholder="apple りんご
+banana バナナ
+orange オレンジ"></textarea>
+
+        </div>
+
+        <div class="section">
+
+            <div class="section-title">
+                区切り設定
+            </div>
+
+            <div class="setting-row">
+
+                <div class="setting">
+
+                    <label>
+                        問題と答えの区切り
+                    </label>
+
+                    <select id="editPairDelimiter">
+
+                        <option value=" ">
+                            半角スペース
+                        </option>
+
+                        <option value="　">
+                            全角スペース
+                        </option>
+
+                        <option value=",">
+                            カンマ ,
+                        </option>
+
+                        <option value="|">
+                            縦線 |
+                        </option>
+
+                        <option value="→">
+                            矢印 →
+                        </option>
+
+                        <option value="custom">
+                            自分で指定
+                        </option>
+
+                    </select>
+
+                    <input
+                        class="custom-input"
+                        id="editPairCustom"
+                        type="text"
+                        placeholder="例：="
+                    >
+
+                </div>
+
+                <div class="setting">
+
+                    <label>
+                        カードの区切り
+                    </label>
+
+                    <select id="editCardDelimiter">
+
+                        <option value="newline">
+                            改行
+                        </option>
+
+                        <option value="double-newline">
+                            改行2回
+                        </option>
+
+                        <option value=",">
+                            カンマ ,
+                        </option>
+
+                        <option value="|">
+                            縦線 |
+                        </option>
+
+                        <option value="custom">
+                            自分で指定
+                        </option>
+
+                    </select>
+
+                    <input
+                        class="custom-input"
+                        id="editCardCustom"
+                        type="text"
+                        placeholder="例：;"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="section">
+
+            <div class="section-title">
+                プレビュー
+            </div>
+
+            <div
+                class="preview"
+                id="editPreview">
+            </div>
+
         </div>
 
         <div class="modal-buttons">
-            <button class="secondary" id="cancelEditButton">キャンセル</button>
-            <button class="primary" id="saveEditButton">保存</button>
+
+            <button
+                class="secondary"
+                id="cancelEditButton">
+                キャンセル
+            </button>
+
+            <button
+                class="primary"
+                id="saveEditButton">
+                保存
+            </button>
+
         </div>
+
     </div>
+
 </div>
 
 <div class="modal" id="deleteModal">
+
     <div class="modal-box">
-        <div class="modal-title">カード束を削除</div>
+
+        <div class="modal-title">
+            カード束を削除
+        </div>
+
         <div id="deleteText"></div>
 
         <div class="modal-buttons">
-            <button class="secondary" id="cancelDeleteButton">キャンセル</button>
-            <button class="danger" id="confirmDeleteButton">削除する</button>
+
+            <button
+                class="secondary"
+                id="cancelDeleteButton">
+                キャンセル
+            </button>
+
+            <button
+                class="danger"
+                id="confirmDeleteButton">
+                削除する
+            </button>
+
         </div>
+
     </div>
+
 </div>
 
 <script>
-const STORAGE_KEY = "bestMemorizeCardDataV1";
+const STORAGE_KEY = "bestMemorizeCardDataV2";
 
 let appData = loadData();
-let currentCards = [];
 let createdCards = [];
 let currentDeckId = null;
-let currentCardIndex = 0;
 let studyQueue = [];
+let currentCardIndex = 0;
+let editingDeckId = null;
+let deletingDeckId = null;
 let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
-let editingDeckId = null;
-let deletingDeckId = null;
 
 const screens = {
     home: document.getElementById("homeScreen"),
@@ -797,42 +1130,126 @@ const screens = {
 
 function loadData() {
     try {
-        const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        if (data && Array.isArray(data.decks)) return data;
+        const oldData = localStorage.getItem("bestMemorizeCardDataV1");
+        const newData = localStorage.getItem(STORAGE_KEY);
+
+        if (newData) {
+            const parsed = JSON.parse(newData);
+
+            if (parsed && Array.isArray(parsed.decks)) {
+                normalizeData(parsed);
+                return parsed;
+            }
+        }
+
+        if (oldData) {
+            const parsed = JSON.parse(oldData);
+
+            if (parsed && Array.isArray(parsed.decks)) {
+                normalizeData(parsed);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+                return parsed;
+            }
+        }
     } catch (e) {}
-    return { decks: [] };
+
+    return {
+        decks: []
+    };
+}
+
+function normalizeData(data) {
+    data.decks.forEach(deck => {
+        deck.cards = Array.isArray(deck.cards) ? deck.cards : [];
+
+        deck.cards.forEach(card => {
+            card.phase = Number(card.phase) || 1;
+            card.reviews = Number(card.reviews) || 0;
+            card.lapses = Number(card.lapses) || 0;
+            card.dueAt = Number(card.dueAt) || 0;
+
+            if (!card.id) {
+                card.id =
+                    Date.now() +
+                    "_" +
+                    Math.random().toString(36).slice(2);
+            }
+        });
+    });
 }
 
 function saveData() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(appData)
+    );
 }
 
 function showScreen(name) {
-    Object.values(screens).forEach(screen => screen.classList.remove("active"));
+    Object.values(screens).forEach(screen => {
+        screen.classList.remove("active");
+    });
+
     screens[name].classList.add("active");
+
     window.scrollTo(0, 0);
 }
 
-function getPairDelimiter() {
-    const value = document.getElementById("pairDelimiter").value;
+function escapeHtml(text) {
+    return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function getPairDelimiter(prefix = "") {
+    const select =
+        document.getElementById(
+            prefix + "PairDelimiter"
+        );
+
+    const value = select.value;
+
     if (value === "custom") {
-        return document.getElementById("pairCustom").value;
+        return document.getElementById(
+            prefix + "PairCustom"
+        ).value;
     }
+
     return value;
 }
 
-function getCardDelimiter() {
-    const value = document.getElementById("cardDelimiter").value;
-    if (value === "newline") return "\n";
-    if (value === "double-newline") return "\n\n";
-    if (value === "custom") {
-        return document.getElementById("cardCustom").value;
+function getCardDelimiter(prefix = "") {
+    const select =
+        document.getElementById(
+            prefix + "CardDelimiter"
+        );
+
+    const value = select.value;
+
+    if (value === "newline") {
+        return "\n";
     }
+
+    if (value === "double-newline") {
+        return "\n\n";
+    }
+
+    if (value === "custom") {
+        return document.getElementById(
+            prefix + "CardCustom"
+        ).value;
+    }
+
     return value;
 }
 
 function splitCards(text, delimiter) {
-    if (!delimiter) return [];
+    if (!delimiter) {
+        return [];
+    }
 
     if (delimiter === "\n\n") {
         return text.split(/\n\s*\n/);
@@ -841,32 +1258,60 @@ function splitCards(text, delimiter) {
     return text.split(delimiter);
 }
 
-function parseCards() {
-    const text = document.getElementById("cardInput").value.trim();
-    const pairDelimiter = getPairDelimiter();
-    const cardDelimiter = getCardDelimiter();
+function parseCardText(text, prefix = "") {
+    const pairDelimiter =
+        getPairDelimiter(prefix);
 
-    if (!text || !pairDelimiter || !cardDelimiter) return [];
+    const cardDelimiter =
+        getCardDelimiter(prefix);
 
-    const rawCards = splitCards(text, cardDelimiter);
+    if (!text.trim()) {
+        return [];
+    }
+
+    if (!pairDelimiter || !cardDelimiter) {
+        return [];
+    }
+
+    const rawCards =
+        splitCards(
+            text.trim(),
+            cardDelimiter
+        );
+
     const result = [];
 
     rawCards.forEach(raw => {
         const cleaned = raw.trim();
-        if (!cleaned) return;
 
-        const index = cleaned.indexOf(pairDelimiter);
+        if (!cleaned) {
+            return;
+        }
+
+        const index =
+            cleaned.indexOf(pairDelimiter);
 
         if (index === -1) {
             result.push({
                 front: cleaned,
                 back: ""
             });
+
             return;
         }
 
-        const front = cleaned.slice(0, index).trim();
-        const back = cleaned.slice(index + pairDelimiter.length).trim();
+        const front =
+            cleaned
+                .slice(0, index)
+                .trim();
+
+        const back =
+            cleaned
+                .slice(
+                    index +
+                    pairDelimiter.length
+                )
+                .trim();
 
         if (front || back) {
             result.push({
@@ -879,57 +1324,139 @@ function parseCards() {
     return result;
 }
 
-function updatePreview() {
-    const preview = document.getElementById("preview");
-    const cards = parseCards();
+function renderPreview(
+    previewId,
+    cards
+) {
+    const preview =
+        document.getElementById(previewId);
 
     preview.innerHTML = "";
 
     if (cards.length === 0) {
-        preview.innerHTML = '<div style="color:#8a93a5;font-size:13px;">ここにカードのプレビューが表示されます。</div>';
+        preview.innerHTML =
+            '<div style="color:#8a93a5;font-size:13px;">ここにカードのプレビューが表示されます。</div>';
+
         return;
     }
 
-    cards.slice(0, 100).forEach((card, index) => {
-        const div = document.createElement("div");
-        div.className = "preview-card";
+    cards.slice(0, 100).forEach(
+        (card, index) => {
 
-        div.innerHTML = `
-            <div class="preview-side">
-                <div class="preview-label">表 ${index + 1}</div>
-                <div class="preview-text">${escapeHtml(card.front)}</div>
-            </div>
-            <div class="preview-side">
-                <div class="preview-label">裏</div>
-                <div class="preview-text">${escapeHtml(card.back)}</div>
-            </div>
-        `;
+            const div =
+                document.createElement("div");
 
-        preview.appendChild(div);
-    });
+            div.className =
+                "preview-card";
+
+            div.innerHTML = `
+                <div class="preview-side">
+                    <div class="preview-label">
+                        表 ${index + 1}
+                    </div>
+
+                    <div class="preview-text">
+                        ${escapeHtml(card.front)}
+                    </div>
+                </div>
+
+                <div class="preview-side">
+                    <div class="preview-label">
+                        裏
+                    </div>
+
+                    <div class="preview-text">
+                        ${escapeHtml(card.back)}
+                    </div>
+                </div>
+            `;
+
+            preview.appendChild(div);
+        }
+    );
 
     if (cards.length > 100) {
-        const more = document.createElement("div");
+        const more =
+            document.createElement("div");
+
         more.style.textAlign = "center";
         more.style.color = "#7b8495";
         more.style.fontSize = "12px";
         more.style.padding = "8px";
-        more.textContent = `ほか ${cards.length - 100} 枚`;
+
+        more.textContent =
+            `ほか ${cards.length - 100} 枚`;
+
         preview.appendChild(more);
     }
 }
 
-function escapeHtml(text) {
-    return String(text)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+function updateCreatePreview() {
+    const cards =
+        parseCardText(
+            document.getElementById(
+                "cardInput"
+            ).value
+        );
+
+    renderPreview(
+        "preview",
+        cards
+    );
+}
+
+function updateEditPreview() {
+    const cards =
+        parseCardText(
+            document.getElementById(
+                "editCardInput"
+            ).value,
+            "edit"
+        );
+
+    renderPreview(
+        "editPreview",
+        cards
+    );
+}
+
+function updateCustomInputs(prefix = "") {
+    const pairSelect =
+        document.getElementById(
+            prefix + "PairDelimiter"
+        );
+
+    const cardSelect =
+        document.getElementById(
+            prefix + "CardDelimiter"
+        );
+
+    const pairCustom =
+        document.getElementById(
+            prefix + "PairCustom"
+        );
+
+    const cardCustom =
+        document.getElementById(
+            prefix + "CardCustom"
+        );
+
+    pairCustom.classList.toggle(
+        "show",
+        pairSelect.value === "custom"
+    );
+
+    cardCustom.classList.toggle(
+        "show",
+        cardSelect.value === "custom"
+    );
 }
 
 function renderDeckList() {
-    const list = document.getElementById("deckList");
+    const list =
+        document.getElementById(
+            "deckList"
+        );
 
     if (appData.decks.length === 0) {
         list.innerHTML = `
@@ -938,141 +1465,243 @@ function renderDeckList() {
                 新しいカード束を作ってみよう。
             </div>
         `;
+
         updateStats();
+
         return;
     }
 
     list.innerHTML = "";
 
-    [...appData.decks].reverse().forEach(deck => {
-        const div = document.createElement("div");
-        div.className = "deck";
+    [...appData.decks]
+        .reverse()
+        .forEach(deck => {
 
-        const total = deck.cards.length;
-        const phases = deck.cards.reduce((sum, card) => sum + card.phase, 0);
+            const div =
+                document.createElement("div");
 
-        div.innerHTML = `
-            <div class="deck-info">
-                <div class="deck-name">${escapeHtml(deck.name)}</div>
-                <div class="deck-count">${total}枚　・　平均Phase ${total ? (phases / total).toFixed(1) : 0}</div>
-            </div>
+            div.className = "deck";
 
-            <div class="deck-actions">
-                <button class="edit-button">編集</button>
-                <button class="delete-button">削除</button>
-                <button class="deck-button">暗記</button>
-            </div>
-        `;
+            const dueCount =
+                deck.cards.filter(
+                    card =>
+                        card.dueAt <= Date.now()
+                ).length;
 
-        div.querySelector(".deck-button").addEventListener("click", () => {
-            startStudy(deck.id);
+            div.innerHTML = `
+                <div class="deck-info">
+
+                    <div class="deck-name">
+                        ${escapeHtml(deck.name)}
+                    </div>
+
+                    <div class="deck-count">
+                        ${deck.cards.length}枚
+                        ・
+                        今日の復習 ${dueCount}枚
+                    </div>
+
+                </div>
+
+                <div class="deck-actions">
+
+                    <button class="edit-button">
+                        編集
+                    </button>
+
+                    <button class="delete-button">
+                        削除
+                    </button>
+
+                    <button class="deck-button">
+                        暗記
+                    </button>
+
+                </div>
+            `;
+
+            div.querySelector(
+                ".deck-button"
+            ).addEventListener(
+                "click",
+                () => startStudy(deck.id)
+            );
+
+            div.querySelector(
+                ".edit-button"
+            ).addEventListener(
+                "click",
+                () => openEditModal(deck.id)
+            );
+
+            div.querySelector(
+                ".delete-button"
+            ).addEventListener(
+                "click",
+                () => openDeleteModal(deck.id)
+            );
+
+            list.appendChild(div);
         });
-
-        div.querySelector(".edit-button").addEventListener("click", () => {
-            openEditModal(deck.id);
-        });
-
-        div.querySelector(".delete-button").addEventListener("click", () => {
-            openDeleteModal(deck.id);
-        });
-
-        list.appendChild(div);
-    });
 
     updateStats();
 }
 
 function updateStats() {
-    const deckCount = appData.decks.length;
     let cardCount = 0;
-    let learningCount = 0;
+    let dueCount = 0;
 
     appData.decks.forEach(deck => {
+
         cardCount += deck.cards.length;
+
         deck.cards.forEach(card => {
-            if (card.phase < 5) learningCount++;
+
+            if (
+                card.dueAt <= Date.now()
+            ) {
+                dueCount++;
+            }
+
         });
     });
 
-    document.getElementById("deckCount").textContent = deckCount;
-    document.getElementById("cardCount").textContent = cardCount;
-    document.getElementById("phaseCount").textContent = learningCount;
+    document.getElementById(
+        "deckCount"
+    ).textContent =
+        appData.decks.length;
+
+    document.getElementById(
+        "cardCount"
+    ).textContent =
+        cardCount;
+
+    document.getElementById(
+        "phaseCount"
+    ).textContent =
+        dueCount;
 }
 
 function startCreate() {
-    document.getElementById("cardInput").value = "";
-    document.getElementById("pairDelimiter").value = " ";
-    document.getElementById("cardDelimiter").value = "newline";
-    document.getElementById("pairCustom").value = "";
-    document.getElementById("cardCustom").value = "";
+    document.getElementById(
+        "cardInput"
+    ).value = "";
+
+    document.getElementById(
+        "pairDelimiter"
+    ).value = " ";
+
+    document.getElementById(
+        "cardDelimiter"
+    ).value = "newline";
+
+    document.getElementById(
+        "pairCustom"
+    ).value = "";
+
+    document.getElementById(
+        "cardCustom"
+    ).value = "";
+
     updateCustomInputs();
-    updatePreview();
+    updateCreatePreview();
+
     showScreen("create");
 }
 
-function updateCustomInputs() {
-    const pairCustom = document.getElementById("pairCustom");
-    const cardCustom = document.getElementById("cardCustom");
-
-    pairCustom.classList.toggle(
-        "show",
-        document.getElementById("pairDelimiter").value === "custom"
-    );
-
-    cardCustom.classList.toggle(
-        "show",
-        document.getElementById("cardDelimiter").value === "custom"
-    );
-}
-
 function prepareSave() {
-    createdCards = parseCards();
+    createdCards =
+        parseCardText(
+            document.getElementById(
+                "cardInput"
+            ).value
+        );
 
     if (createdCards.length === 0) {
-        alert("カードを作るための内容を入力してください。");
+        alert(
+            "カードを作るための内容を入力してください。"
+        );
+
         return;
     }
 
-    if (createdCards.some(card => !card.front || !card.back)) {
-        alert("表と裏の両方が入っていないカードがあります。区切り設定を確認してください。");
+    if (
+        createdCards.some(
+            card =>
+                !card.front ||
+                !card.back
+        )
+    ) {
+        alert(
+            "表と裏の両方が入っていないカードがあります。区切り設定を確認してください。"
+        );
+
         return;
     }
 
-    document.getElementById("createdCardSummary").innerHTML = `
+    document.getElementById(
+        "createdCardSummary"
+    ).innerHTML = `
         <div style="font-size:15px;font-weight:700;margin-bottom:6px;">
             ${createdCards.length}枚のカード
         </div>
+
         <div style="font-size:13px;color:#7b8495;">
-            作成したカードは保存され、いつでも暗記できます。
+            作成したカードは保存され、復習間隔を自動的に調整します。
         </div>
     `;
 
-    document.getElementById("deckNameInput").value = "";
+    document.getElementById(
+        "deckNameInput"
+    ).value = "";
+
     showScreen("name");
 }
 
 function saveNewDeck() {
-    const name = document.getElementById("deckNameInput").value.trim();
+    const name =
+        document.getElementById(
+            "deckNameInput"
+        ).value.trim();
 
     if (!name) {
-        alert("カード束の名前を入力してください。");
+        alert(
+            "カード束の名前を入力してください。"
+        );
+
         return;
     }
 
+    const now = Date.now();
+
     const deck = {
-        id: Date.now().toString(),
+        id: now.toString(),
         name,
-        createdAt: Date.now(),
-        cards: createdCards.map((card, index) => ({
-            id: `${Date.now()}_${index}_${Math.random().toString(36).slice(2)}`,
-            front: card.front,
-            back: card.back,
-            phase: 1,
-            reviews: 0
-        }))
+        createdAt: now,
+        cards: createdCards.map(
+            (card, index) => ({
+                id:
+                    now +
+                    "_" +
+                    index +
+                    "_" +
+                    Math.random()
+                        .toString(36)
+                        .slice(2),
+
+                front: card.front,
+                back: card.back,
+
+                phase: 1,
+                reviews: 0,
+                lapses: 0,
+                dueAt: 0
+            })
+        )
     };
 
     appData.decks.push(deck);
+
     saveData();
     renderDeckList();
 
@@ -1080,357 +1709,940 @@ function saveNewDeck() {
 }
 
 function openEditModal(deckId) {
-    const deck = appData.decks.find(d => d.id === deckId);
-    if (!deck) return;
+    const deck =
+        appData.decks.find(
+            d => d.id === deckId
+        );
+
+    if (!deck) {
+        return;
+    }
 
     editingDeckId = deckId;
 
-    document.getElementById("editDeckName").value = deck.name;
+    document.getElementById(
+        "editDeckName"
+    ).value = deck.name;
 
-    const list = document.getElementById("editCardsList");
-    list.innerHTML = "";
+    document.getElementById(
+        "editPairDelimiter"
+    ).value = " ";
 
-    deck.cards.forEach(card => {
-        addEditCardRow(card.front, card.back, card.id, card.phase, card.reviews);
-    });
+    document.getElementById(
+        "editCardDelimiter"
+    ).value = "newline";
 
-    document.getElementById("editModal").classList.add("show");
-}
+    document.getElementById(
+        "editPairCustom"
+    ).value = "";
 
-function addEditCardRow(front = "", back = "", id = "", phase = 1, reviews = 0) {
-    const list = document.getElementById("editCardsList");
+    document.getElementById(
+        "editCardCustom"
+    ).value = "";
 
-    const div = document.createElement("div");
-    div.className = "edit-card";
+    const text =
+        deck.cards
+            .map(
+                card =>
+                    `${card.front} ${card.back}`
+            )
+            .join("\n");
 
-    div.dataset.id = id;
-    div.dataset.phase = phase;
-    div.dataset.reviews = reviews;
+    document.getElementById(
+        "editCardInput"
+    ).value = text;
 
-    div.innerHTML = `
-        <div class="edit-card-row">
-            <input type="text" class="edit-front" placeholder="表" value="${escapeHtml(front)}">
-            <input type="text" class="edit-back" placeholder="裏" value="${escapeHtml(back)}">
-            <button class="remove-card-button">削除</button>
-        </div>
-    `;
+    updateCustomInputs("edit");
+    updateEditPreview();
 
-    div.querySelector(".remove-card-button").addEventListener("click", () => {
-        div.remove();
-    });
-
-    list.appendChild(div);
+    document.getElementById(
+        "editModal"
+    ).classList.add("show");
 }
 
 function saveEditedDeck() {
-    const deck = appData.decks.find(d => d.id === editingDeckId);
-    if (!deck) return;
+    const deck =
+        appData.decks.find(
+            d => d.id === editingDeckId
+        );
 
-    const name = document.getElementById("editDeckName").value.trim();
+    if (!deck) {
+        return;
+    }
+
+    const name =
+        document.getElementById(
+            "editDeckName"
+        ).value.trim();
+
+    const cards =
+        parseCardText(
+            document.getElementById(
+                "editCardInput"
+            ).value,
+            "edit"
+        );
 
     if (!name) {
-        alert("カード束の名前を入力してください。");
+        alert(
+            "カード束の名前を入力してください。"
+        );
+
         return;
     }
 
-    const rows = [...document.querySelectorAll("#editCardsList .edit-card")];
-    const newCards = [];
+    if (cards.length === 0) {
+        alert(
+            "カードを1枚以上入力してください。"
+        );
 
-    for (const row of rows) {
-        const front = row.querySelector(".edit-front").value.trim();
-        const back = row.querySelector(".edit-back").value.trim();
-
-        if (!front || !back) {
-            alert("表と裏の両方を入力してください。");
-            return;
-        }
-
-        newCards.push({
-            id: row.dataset.id || `${Date.now()}_${Math.random().toString(36).slice(2)}`,
-            front,
-            back,
-            phase: Number(row.dataset.phase) || 1,
-            reviews: Number(row.dataset.reviews) || 0
-        });
-    }
-
-    if (newCards.length === 0) {
-        alert("カードを1枚以上残してください。");
         return;
     }
+
+    if (
+        cards.some(
+            card =>
+                !card.front ||
+                !card.back
+        )
+    ) {
+        alert(
+            "表と裏の両方が入っていないカードがあります。"
+        );
+
+        return;
+    }
+
+    const oldCards =
+        deck.cards;
+
+    const oldMap =
+        new Map(
+            oldCards.map(
+                card => [
+                    card.front +
+                    "\u0000" +
+                    card.back,
+                    card
+                ]
+            )
+        );
+
+    const now = Date.now();
 
     deck.name = name;
-    deck.cards = newCards;
+
+    deck.cards =
+        cards.map(
+            (card, index) => {
+
+                const key =
+                    card.front +
+                    "\u0000" +
+                    card.back;
+
+                const old =
+                    oldMap.get(key);
+
+                if (old) {
+                    return old;
+                }
+
+                return {
+                    id:
+                        now +
+                        "_" +
+                        index +
+                        "_" +
+                        Math.random()
+                            .toString(36)
+                            .slice(2),
+
+                    front: card.front,
+                    back: card.back,
+
+                    phase: 1,
+                    reviews: 0,
+                    lapses: 0,
+                    dueAt: 0
+                };
+            }
+        );
 
     saveData();
 
-    document.getElementById("editModal").classList.remove("show");
+    document.getElementById(
+        "editModal"
+    ).classList.remove("show");
 
     renderDeckList();
 }
 
 function openDeleteModal(deckId) {
-    const deck = appData.decks.find(d => d.id === deckId);
-    if (!deck) return;
+    const deck =
+        appData.decks.find(
+            d => d.id === deckId
+        );
+
+    if (!deck) {
+        return;
+    }
 
     deletingDeckId = deckId;
 
-    document.getElementById("deleteText").innerHTML = `
+    document.getElementById(
+        "deleteText"
+    ).innerHTML = `
         <div style="font-size:15px;line-height:1.7;">
             「<strong>${escapeHtml(deck.name)}</strong>」を削除しますか？
         </div>
+
         <div style="font-size:13px;color:#7b8495;margin-top:8px;">
             ${deck.cards.length}枚のカードと学習履歴も削除されます。
         </div>
     `;
 
-    document.getElementById("deleteModal").classList.add("show");
+    document.getElementById(
+        "deleteModal"
+    ).classList.add("show");
 }
 
 function confirmDeleteDeck() {
-    if (!deletingDeckId) return;
+    if (!deletingDeckId) {
+        return;
+    }
 
-    appData.decks = appData.decks.filter(deck => deck.id !== deletingDeckId);
+    appData.decks =
+        appData.decks.filter(
+            deck =>
+                deck.id !== deletingDeckId
+        );
 
     saveData();
     renderDeckList();
 
     deletingDeckId = null;
 
-    document.getElementById("deleteModal").classList.remove("show");
+    document.getElementById(
+        "deleteModal"
+    ).classList.remove("show");
 }
 
-function weightedShuffle(cards) {
-    const result = [];
+function shuffle(array) {
+    const result =
+        [...array];
 
-    cards.forEach(card => {
-        let weight = 6 - Math.min(card.phase, 5);
+    for (
+        let i = result.length - 1;
+        i > 0;
+        i--
+    ) {
+        const j =
+            Math.floor(
+                Math.random() *
+                (i + 1)
+            );
 
-        if (weight < 1) weight = 1;
-
-        for (let i = 0; i < weight; i++) {
-            result.push(card);
-        }
-    });
-
-    for (let i = result.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [result[i], result[j]] = [result[j], result[i]];
+        [
+            result[i],
+            result[j]
+        ] = [
+            result[j],
+            result[i]
+        ];
     }
 
-    const unique = [];
-    const used = new Set();
-
-    for (const card of result) {
-        if (!used.has(card.id)) {
-            used.add(card.id);
-            unique.push(card);
-        }
-    }
-
-    return unique;
+    return result;
 }
 
-function startStudy(deckId) {
-    const deck = appData.decks.find(d => d.id === deckId);
-    if (!deck || deck.cards.length === 0) return;
+function getDueCards(deck) {
+    const now =
+        Date.now();
+
+    return deck.cards.filter(
+        card =>
+            card.dueAt <= now
+    );
+}
+
+function startStudy(
+    deckId,
+    forceAll = false
+) {
+    const deck =
+        appData.decks.find(
+            d => d.id === deckId
+        );
+
+    if (!deck || deck.cards.length === 0) {
+        return;
+    }
 
     currentDeckId = deckId;
-    currentCards = deck.cards;
-    studyQueue = weightedShuffle(currentCards);
+
+    let cards;
+
+    if (forceAll) {
+        cards =
+            shuffle(deck.cards);
+    } else {
+        cards =
+            shuffle(
+                getDueCards(deck)
+            );
+    }
+
+    if (cards.length === 0) {
+        showNoDueCards(deck);
+        return;
+    }
+
+    studyQueue =
+        cards.map(card => ({
+            card,
+            sessionState: "pending"
+        }));
+
     currentCardIndex = 0;
 
-    document.getElementById("studyDeckName").textContent = deck.name;
+    document.getElementById(
+        "studyDeckName"
+    ).textContent =
+        deck.name;
 
     showScreen("study");
+
     showCurrentCard();
 }
 
+function showNoDueCards(deck) {
+    showScreen("study");
+
+    document.getElementById(
+        "studyDeckName"
+    ).textContent =
+        deck.name;
+
+    document.getElementById(
+        "studyPhase"
+    ).textContent =
+        "今日の復習はありません";
+
+    document.getElementById(
+        "studyContent"
+    ).innerHTML = `
+        <div class="study-empty">
+
+            <div class="study-empty-title">
+                今日はここまで！
+            </div>
+
+            <div class="study-empty-text">
+                現在、復習する期限になっているカードはありません。<br>
+                もう一度練習したい場合は、全カードを復習できます。
+            </div>
+
+            <button
+                class="primary"
+                id="studyAllButton">
+                全カードを今すぐ復習
+            </button>
+
+            <div style="height:10px"></div>
+
+            <button
+                class="secondary"
+                id="studyHomeButton">
+                ホームへ
+            </button>
+
+        </div>
+    `;
+
+    document.getElementById(
+        "studyAllButton"
+    ).addEventListener(
+        "click",
+        () => startStudy(
+            deck.id,
+            true
+        )
+    );
+
+    document.getElementById(
+        "studyHomeButton"
+    ).addEventListener(
+        "click",
+        () => {
+            renderDeckList();
+            showScreen("home");
+        }
+    );
+}
+
 function showCurrentCard() {
-    if (currentCardIndex >= studyQueue.length) {
+    if (
+        currentCardIndex >=
+        studyQueue.length
+    ) {
         finishStudy();
         return;
     }
 
-    const card = studyQueue[currentCardIndex];
+    const item =
+        studyQueue[
+            currentCardIndex
+        ];
 
-    document.getElementById("frontText").textContent = card.front;
-    document.getElementById("backText").textContent = card.back;
-    document.getElementById("flashcard").classList.remove("flipped");
+    const card =
+        item.card;
 
-    const percent = (currentCardIndex / studyQueue.length) * 100;
-    document.getElementById("progressBar").style.width = `${percent}%`;
+    document.getElementById(
+        "frontText"
+    ).textContent =
+        card.front;
 
-    document.getElementById("studyPhase").textContent = `Phase ${card.phase}`;
-    document.getElementById("studyMessage").textContent =
-        `${currentCardIndex + 1} / ${studyQueue.length}`;
+    document.getElementById(
+        "backText"
+    ).textContent =
+        card.back;
+
+    document.getElementById(
+        "flashcard"
+    ).classList.remove(
+        "flipped"
+    );
+
+    const remaining =
+        studyQueue.length -
+        currentCardIndex;
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        `${Math.min(
+            100,
+            (currentCardIndex /
+                Math.max(
+                    1,
+                    studyQueue.length
+                )) *
+                100
+        )}%`;
+
+    document.getElementById(
+        "studyPhase"
+    ).textContent =
+        `Phase ${card.phase}`;
+
+    document.getElementById(
+        "studyMessage"
+    ).textContent =
+        `${currentCardIndex + 1} / ${studyQueue.length}　残り ${remaining}枚`;
 }
 
 function flipCard() {
-    document.getElementById("flashcard").classList.toggle("flipped");
+    document.getElementById(
+        "flashcard"
+    ).classList.toggle(
+        "flipped"
+    );
+}
+
+function getIntervalMs(phase) {
+    const intervals = {
+        1: 10 * 60 * 1000,
+        2: 24 * 60 * 60 * 1000,
+        3: 3 * 24 * 60 * 60 * 1000,
+        4: 7 * 24 * 60 * 60 * 1000,
+        5: 30 * 24 * 60 * 60 * 1000
+    };
+
+    return (
+        intervals[
+            Math.min(
+                5,
+                Math.max(
+                    1,
+                    phase
+                )
+            )
+        ]
+    );
 }
 
 function rateCard(known) {
-    const card = studyQueue[currentCardIndex];
+    const item =
+        studyQueue[
+            currentCardIndex
+        ];
 
-    if (!card) return;
+    if (!item) {
+        return;
+    }
 
-    const deck = appData.decks.find(d => d.id === currentDeckId);
-    if (!deck) return;
+    const card =
+        item.card;
 
-    const savedCard = deck.cards.find(c => c.id === card.id);
-    if (!savedCard) return;
+    const deck =
+        appData.decks.find(
+            d =>
+                d.id ===
+                currentDeckId
+        );
 
-    if (known) {
-        savedCard.phase = Math.min(5, savedCard.phase + 1);
-    } else {
-        savedCard.phase = Math.max(1, savedCard.phase - 1);
+    if (!deck) {
+        return;
+    }
+
+    const savedCard =
+        deck.cards.find(
+            c =>
+                c.id ===
+                card.id
+        );
+
+    if (!savedCard) {
+        return;
     }
 
     savedCard.reviews++;
 
-    saveData();
+    if (known) {
 
-    currentCardIndex++;
+        savedCard.phase =
+            Math.min(
+                5,
+                savedCard.phase + 1
+            );
+
+        savedCard.dueAt =
+            Date.now() +
+            getIntervalMs(
+                savedCard.phase
+            );
+
+        item.sessionState =
+            "known";
+
+        currentCardIndex++;
+
+    } else {
+
+        savedCard.phase =
+            Math.max(
+                1,
+                savedCard.phase - 1
+            );
+
+        savedCard.lapses++;
+
+        savedCard.dueAt =
+            Date.now() +
+            10 * 60 * 1000;
+
+        item.sessionState =
+            "again";
+
+        currentCardIndex++;
+
+        const remaining =
+            studyQueue.length -
+            currentCardIndex;
+
+        const insertOffset =
+            Math.min(
+                3 +
+                Math.floor(
+                    Math.random() * 3
+                ),
+                Math.max(
+                    1,
+                    remaining
+                )
+            );
+
+        const targetIndex =
+            currentCardIndex +
+            insertOffset;
+
+        studyQueue.splice(
+            targetIndex,
+            0,
+            {
+                card,
+                sessionState:
+                    "requeued"
+            }
+        );
+    }
+
+    saveData();
 
     showCurrentCard();
 }
 
 function finishStudy() {
-    const deck = appData.decks.find(d => d.id === currentDeckId);
+    const deck =
+        appData.decks.find(
+            d =>
+                d.id ===
+                currentDeckId
+        );
 
-    if (!deck) return;
+    if (!deck) {
+        return;
+    }
 
-    const average = deck.cards.reduce((sum, card) => sum + card.phase, 0) / deck.cards.length;
+    const average =
+        deck.cards.reduce(
+            (sum, card) =>
+                sum +
+                card.phase,
+            0
+        ) /
+        deck.cards.length;
 
-    document.getElementById("completeText").innerHTML = `
+    const dueCount =
+        getDueCards(
+            deck
+        ).length;
+
+    document.getElementById(
+        "completeText"
+    ).innerHTML = `
         <div style="font-size:16px;margin-bottom:8px;">
             ${escapeHtml(deck.name)}
         </div>
-        <div style="color:#697386;font-size:14px;line-height:1.7;">
-            今回の学習：${studyQueue.length}枚<br>
-            平均Phase：${average.toFixed(1)}
+
+        <div style="color:#697386;font-size:14px;line-height:1.8;">
+            今回の復習：${studyQueue.length}枚<br>
+            平均Phase：${average.toFixed(1)}<br>
+            次に復習するカード：${dueCount}枚
         </div>
     `;
 
-    document.getElementById("completeModal").classList.add("show");
+    document.getElementById(
+        "completeModal"
+    ).classList.add("show");
+
     saveData();
 }
 
 function closeComplete() {
-    document.getElementById("completeModal").classList.remove("show");
+    document.getElementById(
+        "completeModal"
+    ).classList.remove("show");
+
     renderDeckList();
     showScreen("home");
 }
 
 function restartCurrentDeck() {
-    document.getElementById("completeModal").classList.remove("show");
-    startStudy(currentDeckId);
+    document.getElementById(
+        "completeModal"
+    ).classList.remove("show");
+
+    startStudy(
+        currentDeckId,
+        true
+    );
 }
 
-document.getElementById("createButton").addEventListener("click", startCreate);
+document.getElementById(
+    "createButton"
+).addEventListener(
+    "click",
+    startCreate
+);
 
-document.getElementById("homeButton").addEventListener("click", () => {
-    renderDeckList();
-    showScreen("home");
-});
-
-document.getElementById("cancelCreateButton").addEventListener("click", () => {
-    showScreen("home");
-});
-
-document.getElementById("cancelNameButton").addEventListener("click", () => {
-    showScreen("create");
-});
-
-document.getElementById("makeCardsButton").addEventListener("click", prepareSave);
-
-document.getElementById("saveDeckButton").addEventListener("click", saveNewDeck);
-
-document.getElementById("exitStudyButton").addEventListener("click", () => {
-    renderDeckList();
-    showScreen("home");
-});
-
-document.getElementById("completeHomeButton").addEventListener("click", closeComplete);
-
-document.getElementById("completeAgainButton").addEventListener("click", restartCurrentDeck);
-
-document.getElementById("flashcard").addEventListener("click", flipCard);
-
-document.getElementById("unknownButton").addEventListener("click", () => {
-    rateCard(false);
-});
-
-document.getElementById("knownButton").addEventListener("click", () => {
-    rateCard(true);
-});
-
-document.getElementById("cardInput").addEventListener("input", updatePreview);
-
-document.getElementById("pairDelimiter").addEventListener("change", () => {
-    updateCustomInputs();
-    updatePreview();
-});
-
-document.getElementById("cardDelimiter").addEventListener("change", () => {
-    updateCustomInputs();
-    updatePreview();
-});
-
-document.getElementById("pairCustom").addEventListener("input", updatePreview);
-
-document.getElementById("cardCustom").addEventListener("input", updatePreview);
-
-document.getElementById("addCardButton").addEventListener("click", () => {
-    addEditCardRow();
-});
-
-document.getElementById("saveEditButton").addEventListener("click", saveEditedDeck);
-
-document.getElementById("cancelEditButton").addEventListener("click", () => {
-    document.getElementById("editModal").classList.remove("show");
-});
-
-document.getElementById("confirmDeleteButton").addEventListener("click", confirmDeleteDeck);
-
-document.getElementById("cancelDeleteButton").addEventListener("click", () => {
-    document.getElementById("deleteModal").classList.remove("show");
-});
-
-const cardArea = document.getElementById("cardArea");
-
-cardArea.addEventListener("touchstart", event => {
-    if (event.touches.length !== 1) return;
-
-    isDragging = true;
-    dragStartX = event.touches[0].clientX;
-    dragStartY = event.touches[0].clientY;
-}, { passive: true });
-
-cardArea.addEventListener("touchend", event => {
-    if (!isDragging) return;
-
-    isDragging = false;
-
-    const endX = event.changedTouches[0].clientX;
-    const endY = event.changedTouches[0].clientY;
-
-    const dx = endX - dragStartX;
-    const dy = endY - dragStartY;
-
-    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy)) return;
-
-    if (dx > 0) {
-        rateCard(true);
-    } else {
-        rateCard(false);
+document.getElementById(
+    "homeButton"
+).addEventListener(
+    "click",
+    () => {
+        renderDeckList();
+        showScreen("home");
     }
-}, { passive: true });
+);
+
+document.getElementById(
+    "cancelCreateButton"
+).addEventListener(
+    "click",
+    () => {
+        showScreen("home");
+    }
+);
+
+document.getElementById(
+    "cancelNameButton"
+).addEventListener(
+    "click",
+    () => {
+        showScreen("create");
+    }
+);
+
+document.getElementById(
+    "makeCardsButton"
+).addEventListener(
+    "click",
+    prepareSave
+);
+
+document.getElementById(
+    "saveDeckButton"
+).addEventListener(
+    "click",
+    saveNewDeck
+);
+
+document.getElementById(
+    "exitStudyButton"
+).addEventListener(
+    "click",
+    () => {
+        renderDeckList();
+        showScreen("home");
+    }
+);
+
+document.getElementById(
+    "completeHomeButton"
+).addEventListener(
+    "click",
+    closeComplete
+);
+
+document.getElementById(
+    "completeAgainButton"
+).addEventListener(
+    "click",
+    restartCurrentDeck
+);
+
+document.getElementById(
+    "flashcard"
+).addEventListener(
+    "click",
+    flipCard
+);
+
+document.getElementById(
+    "unknownButton"
+).addEventListener(
+    "click",
+    () => rateCard(false)
+);
+
+document.getElementById(
+    "knownButton"
+).addEventListener(
+    "click",
+    () => rateCard(true)
+);
+
+document.getElementById(
+    "cardInput"
+).addEventListener(
+    "input",
+    updateCreatePreview
+);
+
+document.getElementById(
+    "pairDelimiter"
+).addEventListener(
+    "change",
+    () => {
+        updateCustomInputs();
+        updateCreatePreview();
+    }
+);
+
+document.getElementById(
+    "cardDelimiter"
+).addEventListener(
+    "change",
+    () => {
+        updateCustomInputs();
+        updateCreatePreview();
+    }
+);
+
+document.getElementById(
+    "pairCustom"
+).addEventListener(
+    "input",
+    updateCreatePreview
+);
+
+document.getElementById(
+    "cardCustom"
+).addEventListener(
+    "input",
+    updateCreatePreview
+);
+
+document.getElementById(
+    "editCardInput"
+).addEventListener(
+    "input",
+    updateEditPreview
+);
+
+document.getElementById(
+    "editPairDelimiter"
+).addEventListener(
+    "change",
+    () => {
+        updateCustomInputs("edit");
+        updateEditPreview();
+    }
+);
+
+document.getElementById(
+    "editCardDelimiter"
+).addEventListener(
+    "change",
+    () => {
+        updateCustomInputs("edit");
+        updateEditPreview();
+    }
+);
+
+document.getElementById(
+    "editPairCustom"
+).addEventListener(
+    "input",
+    updateEditPreview
+);
+
+document.getElementById(
+    "editCardCustom"
+).addEventListener(
+    "input",
+    updateEditPreview
+);
+
+document.getElementById(
+    "saveEditButton"
+).addEventListener(
+    "click",
+    saveEditedDeck
+);
+
+document.getElementById(
+    "cancelEditButton"
+).addEventListener(
+    "click",
+    () => {
+        document.getElementById(
+            "editModal"
+        ).classList.remove("show");
+    }
+);
+
+document.getElementById(
+    "confirmDeleteButton"
+).addEventListener(
+    "click",
+    confirmDeleteDeck
+);
+
+document.getElementById(
+    "cancelDeleteButton"
+).addEventListener(
+    "click",
+    () => {
+        document.getElementById(
+            "deleteModal"
+        ).classList.remove("show");
+    }
+);
+
+const cardArea =
+    document.getElementById(
+        "cardArea"
+    );
+
+cardArea.addEventListener(
+    "touchstart",
+    event => {
+
+        if (
+            event.touches.length !== 1
+        ) {
+            return;
+        }
+
+        isDragging = true;
+
+        dragStartX =
+            event.touches[0]
+                .clientX;
+
+        dragStartY =
+            event.touches[0]
+                .clientY;
+
+    },
+    {
+        passive: true
+    }
+);
+
+cardArea.addEventListener(
+    "touchend",
+    event => {
+
+        if (!isDragging) {
+            return;
+        }
+
+        isDragging = false;
+
+        const endX =
+            event.changedTouches[0]
+                .clientX;
+
+        const endY =
+            event.changedTouches[0]
+                .clientY;
+
+        const dx =
+            endX -
+            dragStartX;
+
+        const dy =
+            endY -
+            dragStartY;
+
+        if (
+            Math.abs(dx) < 60 ||
+            Math.abs(dx) <
+                Math.abs(dy)
+        ) {
+            return;
+        }
+
+        if (dx > 0) {
+            rateCard(true);
+        } else {
+            rateCard(false);
+        }
+
+    },
+    {
+        passive: true
+    }
+);
 
 renderDeckList();
 updateCustomInputs();
-updatePreview();
+updateCustomInputs("edit");
+updateCreatePreview();
+updateEditPreview();
 </script>
 
 </body>
