@@ -1378,7 +1378,8 @@ function parseCardText(text, prefix = "") {
 
 function renderPreview(
     previewId,
-    cards
+    cards,
+    phaseGetter = null
 ) {
     const preview =
         document.getElementById(
@@ -1403,6 +1404,11 @@ function renderPreview(
             div.className =
                 "preview-card";
 
+            const phase =
+                phaseGetter
+                    ? phaseGetter(card, index)
+                    : null;
+
             div.innerHTML = `
                 <div class="preview-side">
                     <div class="preview-label">
@@ -1417,6 +1423,11 @@ function renderPreview(
                 <div class="preview-side">
                     <div class="preview-label">
                         裏
+                        ${
+                            phase !== null
+                                ? `・ Phase ${phase}`
+                                : ""
+                        }
                     </div>
 
                     <div class="preview-text">
@@ -1468,9 +1479,40 @@ function updateEditPreview() {
             "edit"
         );
 
+    const deck =
+        appData.decks.find(
+            d =>
+                d.id ===
+                editingDeckId
+        );
+
+    const phaseMap =
+        new Map(
+            (deck ? deck.cards : []).map(
+                card => [
+                    card.front +
+                    "\u0000" +
+                    card.back,
+                    card.phase
+                ]
+            )
+        );
+
     renderPreview(
         "editPreview",
-        cards
+        cards,
+        card =>
+            phaseMap.has(
+                card.front +
+                "\u0000" +
+                card.back
+            )
+                ? phaseMap.get(
+                    card.front +
+                    "\u0000" +
+                    card.back
+                )
+                : 1
     );
 }
 
@@ -2058,16 +2100,6 @@ function startStudy(
         return;
     }
 
-    deck.cards.forEach(card => {
-        if (card.dueAt === undefined || card.dueAt === null || !Number.isFinite(Number(card.dueAt))) {
-            card.dueAt = 0;
-        }
-
-        if (card.phase === undefined || card.phase === null) {
-            card.phase = 1;
-        }
-    });
-
     currentDeckId = deckId;
 
     let cards;
@@ -2105,6 +2137,28 @@ function startStudy(
     showCurrentCard();
 }
 
+function restoreStudyContent() {
+    const content =
+        document.getElementById(
+            "studyContent"
+        );
+
+    const empty =
+        document.getElementById(
+            "studyEmpty"
+        );
+
+    if (empty) {
+        empty.remove();
+    }
+
+    Array.from(
+        content.children
+    ).forEach(child => {
+        child.style.display = "";
+    });
+}
+
 function showNoDueCards(deck) {
     showScreen("study");
 
@@ -2118,47 +2172,63 @@ function showNoDueCards(deck) {
     ).textContent =
         "今日の復習はありません";
 
-    document.getElementById(
-        "studyContent"
-    ).innerHTML = `
-        <div class="study-empty">
+    const content =
+        document.getElementById(
+            "studyContent"
+        );
 
-            <div class="study-empty-title">
-                今日はここまで！
-            </div>
+    Array.from(
+        content.children
+    ).forEach(child => {
+        child.style.display = "none";
+    });
 
-            <div class="study-empty-text">
-                現在、復習する期限になっているカードはありません。<br>
-                もう一度練習したい場合は、全カードを復習できます。
-            </div>
+    const empty =
+        document.createElement("div");
 
-            <button
-                type="button"
-                class="primary"
-                id="studyAllButton">
-                全カードを今すぐ復習
-            </button>
+    empty.id = "studyEmpty";
+    empty.className = "study-empty";
 
-            <div style="height:10px"></div>
-
-            <button
-                type="button"
-                class="secondary"
-                id="studyHomeButton">
-                ホームへ
-            </button>
-
+    empty.innerHTML = `
+        <div class="study-empty-title">
+            今日はここまで！
         </div>
+
+        <div class="study-empty-text">
+            現在、復習する期限になっているカードはありません。<br>
+            もう一度練習したい場合は、全カードを復習できます。
+        </div>
+
+        <button
+            type="button"
+            class="primary"
+            id="studyAllButton">
+            全カードを今すぐ復習
+        </button>
+
+        <div style="height:10px"></div>
+
+        <button
+            type="button"
+            class="secondary"
+            id="studyHomeButton">
+            ホームへ
+        </button>
     `;
+
+    content.appendChild(empty);
 
     document.getElementById(
         "studyAllButton"
     ).addEventListener(
         "click",
-        () => startStudy(
-            deck.id,
-            true
-        )
+        () => {
+            restoreStudyContent();
+            startStudy(
+                deck.id,
+                true
+            );
+        }
     );
 
     document.getElementById(
@@ -2166,6 +2236,7 @@ function showNoDueCards(deck) {
     ).addEventListener(
         "click",
         () => {
+            restoreStudyContent();
             renderDeckList();
             showScreen("home");
         }
