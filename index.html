@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BEST MEMORIZE CARD</title>
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f5f7fb;
+    color: #172033;
+}
+
+body {
+    overscroll-behavior: none;
+}
+
+button, textarea, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: #f5f7fb;
+}
+
+header {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: white;
+    border-bottom: 1px solid #e5e8ef;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.header-button {
+    border: 0;
+    background: #eef2f8;
+    color: #172033;
+    border-radius: 10px;
+    padding: 9px 14px;
+    font-weight: 600;
+}
+
+.screen {
+    display: none;
+    padding: 24px 18px 40px;
+}
+
+.screen.active {
+    display: block;
+}
+
+h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+h2 {
+    margin: 0 0 16px;
+    font-size: 21px;
+}
+
+.subtitle {
+    color: #697386;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.section {
+    background: white;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 16px;
+    border: 1px solid #e7eaf0;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 300px;
+    resize: vertical;
+    border: 2px solid #dfe4ed;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 17px;
+    line-height: 1.7;
+    outline: none;
+    background: #fbfcfe;
+}
+
+textarea:focus {
+    border-color: #5577e8;
+    background: white;
+}
+
+.setting-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.setting {
+    min-width: 0;
+}
+
+label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #697386;
+    margin-bottom: 7px;
+}
+
+select,
+input[type="text"] {
+    width: 100%;
+    border: 1px solid #dfe4ed;
+    border-radius: 10px;
+    background: #fbfcfe;
+    padding: 11px 12px;
+    outline: none;
+}
+
+select:focus,
+input[type="text"]:focus {
+    border-color: #5577e8;
+}
+
+.custom-input {
+    margin-top: 8px;
+    display: none;
+}
+
+.custom-input.show {
+    display: block;
+}
+
+.preview {
+    background: #f6f8fc;
+    border-radius: 12px;
+    padding: 12px;
+    max-height: 260px;
+    overflow: auto;
+}
+
+.preview-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    background: white;
+    border: 1px solid #e5e8ef;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 8px;
+}
+
+.preview-side {
+    min-width: 0;
+}
+
+.preview-label {
+    font-size: 10px;
+    color: #8a93a5;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.preview-text {
+    word-break: break-word;
+    font-size: 14px;
+}
+
+.primary {
+    width: 100%;
+    border: 0;
+    border-radius: 14px;
+    background: #315bdc;
+    color: white;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.primary:active {
+    transform: scale(0.98);
+}
+
+.secondary {
+    width: 100%;
+    border: 1px solid #dfe4ed;
+    border-radius: 14px;
+    background: white;
+    color: #172033;
+    padding: 14px;
+    font-weight: 700;
+}
+
+.deck {
+    background: white;
+    border: 1px solid #e5e8ef;
+    border-radius: 16px;
+    padding: 17px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.deck-info {
+    min-width: 0;
+}
+
+.deck-name {
+    font-weight: 800;
+    font-size: 17px;
+    margin-bottom: 6px;
+    word-break: break-word;
+}
+
+.deck-count {
+    font-size: 12px;
+    color: #7b8495;
+}
+
+.deck-button {
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    background: #315bdc;
+    color: white;
+    font-weight: 700;
+}
+
+.empty {
+    text-align: center;
+    color: #7b8495;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #e5e8ef;
+}
+
+.study-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.study-info {
+    font-size: 13px;
+    color: #697386;
+}
+
+.phase-info {
+    font-weight: 800;
+    color: #315bdc;
+}
+
+.progress {
+    height: 7px;
+    background: #e5e8ef;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 22px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #315bdc;
+    transition: width 0.25s ease;
+}
+
+.card-area {
+    width: 100%;
+    height: min(65vh, 500px);
+    min-height: 360px;
+    perspective: 1200px;
+    touch-action: pan-y;
+    user-select: none;
+}
+
+.flashcard {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.45s ease;
+    cursor: pointer;
+}
+
+.flashcard.flipped {
+    transform: rotateY(180deg);
+}
+
+.card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 24px;
+    background: white;
+    border: 1px solid #e3e7ef;
+    box-shadow: 0 12px 35px rgba(20, 30, 55, 0.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    text-align: center;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    background: #f8faff;
+}
+
+.card-text {
+    font-size: clamp(28px, 8vw, 54px);
+    font-weight: 700;
+    line-height: 1.35;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.card-hint {
+    position: absolute;
+    bottom: 18px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #929aaa;
+    font-size: 12px;
+}
+
+.swipe-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.swipe-button {
+    border: 0;
+    border-radius: 15px;
+    padding: 15px;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.unknown {
+    background: #fff0f0;
+    color: #c43b3b;
+}
+
+.known {
+    background: #eefaf2;
+    color: #21804a;
+}
+
+.study-message {
+    text-align: center;
+    font-size: 14px;
+    color: #697386;
+    margin-top: 12px;
+    min-height: 20px;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 18, 30, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-box {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border-radius: 20px;
+    padding: 22px;
+}
+
+.modal-title {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 16px;
+}
+
+.modal-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.stat {
+    background: white;
+    border: 1px solid #e5e8ef;
+    border-radius: 13px;
+    padding: 12px 8px;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.stat-label {
+    font-size: 10px;
+    color: #7b8495;
+    margin-top: 3px;
+}
+
+@media (max-width: 520px) {
+    .screen {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    header {
+        padding: 0 15px;
+    }
+
+    textarea {
+        min-height: 260px;
+    }
+
+    .setting-row {
+        grid-template-columns: 1fr;
+    }
+
+    .card-area {
+        height: 58vh;
+        min-height: 330px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<header>
+    <div class="logo">BEST MEMORIZE CARD</div>
+    <button class="header-button" id="homeButton">ホーム</button>
+</header>
+
+<section class="screen active" id="homeScreen">
+    <h1>暗記カード</h1>
+    <div class="subtitle">
+        カードをまとめて作って、効率よく覚えよう。
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-number" id="deckCount">0</div>
+            <div class="stat-label">カード束</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number" id="cardCount">0</div>
+            <div class="stat-label">カード</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number" id="phaseCount">0</div>
+            <div class="stat-label">学習中</div>
+        </div>
+    </div>
+
+    <button class="primary" id="createButton">＋ 新しいカード束を作る</button>
+
+    <div style="height:20px"></div>
+
+    <h2>カード束</h2>
+    <div id="deckList"></div>
+</section>
+
+<section class="screen" id="createScreen">
+    <h1>カードを作る</h1>
+    <div class="subtitle">
+        文章をまとめて入力し、区切り方を指定してください。
+    </div>
+
+    <div class="section">
+        <div class="section-title">カードの内容</div>
+        <textarea id="cardInput" placeholder="apple りんご
+banana バナナ
+orange オレンジ"></textarea>
+    </div>
+
+    <div class="section">
+        <div class="section-title">区切り設定</div>
+
+        <div class="setting-row">
+            <div class="setting">
+                <label>問題と答えの区切り</label>
+                <select id="pairDelimiter">
+                    <option value=" ">半角スペース</option>
+                    <option value="　">全角スペース</option>
+                    <option value=",">カンマ ,</option>
+                    <option value="|">縦線 |</option>
+                    <option value="→">矢印 →</option>
+                    <option value="custom">自分で指定</option>
+                </select>
+                <input class="custom-input" id="pairCustom" type="text" placeholder="例：=">
+            </div>
+
+            <div class="setting">
+                <label>カードの区切り</label>
+                <select id="cardDelimiter">
+                    <option value="newline">改行</option>
+                    <option value="double-newline">改行2回</option>
+                    <option value=",">カンマ ,</option>
+                    <option value="|">縦線 |</option>
+                    <option value="custom">自分で指定</option>
+                </select>
+                <input class="custom-input" id="cardCustom" type="text" placeholder="例：;">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">プレビュー</div>
+        <div class="preview" id="preview"></div>
+    </div>
+
+    <button class="primary" id="makeCardsButton">カードを作成する</button>
+
+    <div style="height:10px"></div>
+
+    <button class="secondary" id="cancelCreateButton">戻る</button>
+</section>
+
+<section class="screen" id="nameScreen">
+    <h1>カード束を保存</h1>
+    <div class="subtitle">
+        このカード束に名前をつけてください。
+    </div>
+
+    <div class="section">
+        <div class="section-title">カード束の名前</div>
+        <input id="deckNameInput" type="text" maxlength="50" placeholder="例：英単語">
+    </div>
+
+    <div class="section">
+        <div class="section-title">作成されるカード</div>
+        <div id="createdCardSummary"></div>
+    </div>
+
+    <button class="primary" id="saveDeckButton">保存して暗記する</button>
+
+    <div style="height:10px"></div>
+
+    <button class="secondary" id="cancelNameButton">戻る</button>
+</section>
+
+<section class="screen" id="studyScreen">
+    <div class="study-top">
+        <div>
+            <div class="study-info" id="studyDeckName"></div>
+            <div class="phase-info" id="studyPhase"></div>
+        </div>
+        <button class="header-button" id="exitStudyButton">終了</button>
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="card-area" id="cardArea">
+        <div class="flashcard" id="flashcard">
+            <div class="card-face">
+                <div class="card-text" id="frontText"></div>
+                <div class="card-hint">タップして答えを見る</div>
+            </div>
+
+            <div class="card-face card-back">
+                <div class="card-text" id="backText"></div>
+                <div class="card-hint">右＝わかった　左＝わからない</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="swipe-buttons">
+        <button class="swipe-button unknown" id="unknownButton">← わからない</button>
+        <button class="swipe-button known" id="knownButton">わかった →</button>
+    </div>
+
+    <div class="study-message" id="studyMessage"></div>
+</section>
+
+</div>
+
+<div class="modal" id="completeModal">
+    <div class="modal-box">
+        <div class="modal-title">今回の学習が終了しました</div>
+        <div id="completeText"></div>
+
+        <div class="modal-buttons">
+            <button class="secondary" id="completeHomeButton">ホームへ</button>
+            <button class="primary" id="completeAgainButton">もう一度</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const STORAGE_KEY = "bestMemorizeCardDataV1";
+
+let appData = loadData();
+let currentCards = [];
+let createdCards = [];
+let currentDeckId = null;
+let currentCardIndex = 0;
+let studyQueue = [];
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+
+const screens = {
+    home: document.getElementById("homeScreen"),
+    create: document.getElementById("createScreen"),
+    name: document.getElementById("nameScreen"),
+    study: document.getElementById("studyScreen")
+};
+
+function loadData() {
+    try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (data && Array.isArray(data.decks)) return data;
+    } catch (e) {}
+    return { decks: [] };
+}
+
+function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+}
+
+function showScreen(name) {
+    Object.values(screens).forEach(screen => screen.classList.remove("active"));
+    screens[name].classList.add("active");
+    window.scrollTo(0, 0);
+}
+
+function getPairDelimiter() {
+    const value = document.getElementById("pairDelimiter").value;
+    if (value === "custom") {
+        return document.getElementById("pairCustom").value;
+    }
+    return value;
+}
+
+function getCardDelimiter() {
+    const value = document.getElementById("cardDelimiter").value;
+    if (value === "newline") return "\n";
+    if (value === "double-newline") return "\n\n";
+    if (value === "custom") {
+        return document.getElementById("cardCustom").value;
+    }
+    return value;
+}
+
+function splitCards(text, delimiter) {
+    if (!delimiter) return [];
+
+    if (delimiter === "\n\n") {
+        return text.split(/\n\s*\n/);
+    }
+
+    return text.split(delimiter);
+}
+
+function parseCards() {
+    const text = document.getElementById("cardInput").value.trim();
+    const pairDelimiter = getPairDelimiter();
+    const cardDelimiter = getCardDelimiter();
+
+    if (!text || !pairDelimiter || !cardDelimiter) return [];
+
+    const rawCards = splitCards(text, cardDelimiter);
+    const result = [];
+
+    rawCards.forEach(raw => {
+        const cleaned = raw.trim();
+        if (!cleaned) return;
+
+        const index = cleaned.indexOf(pairDelimiter);
+
+        if (index === -1) {
+            result.push({
+                front: cleaned,
+                back: ""
+            });
+            return;
+        }
+
+        const front = cleaned.slice(0, index).trim();
+        const back = cleaned.slice(index + pairDelimiter.length).trim();
+
+        if (front || back) {
+            result.push({
+                front,
+                back
+            });
+        }
+    });
+
+    return result;
+}
+
+function updatePreview() {
+    const preview = document.getElementById("preview");
+    const cards = parseCards();
+
+    preview.innerHTML = "";
+
+    if (cards.length === 0) {
+        preview.innerHTML = '<div style="color:#8a93a5;font-size:13px;">ここにカードのプレビューが表示されます。</div>';
+        return;
+    }
+
+    cards.slice(0, 100).forEach((card, index) => {
+        const div = document.createElement("div");
+        div.className = "preview-card";
+
+        div.innerHTML = `
+            <div class="preview-side">
+                <div class="preview-label">表 ${index + 1}</div>
+                <div class="preview-text">${escapeHtml(card.front)}</div>
+            </div>
+            <div class="preview-side">
+                <div class="preview-label">裏</div>
+                <div class="preview-text">${escapeHtml(card.back)}</div>
+            </div>
+        `;
+
+        preview.appendChild(div);
+    });
+
+    if (cards.length > 100) {
+        const more = document.createElement("div");
+        more.style.textAlign = "center";
+        more.style.color = "#7b8495";
+        more.style.fontSize = "12px";
+        more.style.padding = "8px";
+        more.textContent = `ほか ${cards.length - 100} 枚`;
+        preview.appendChild(more);
+    }
+}
+
+function escapeHtml(text) {
+    return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function renderDeckList() {
+    const list = document.getElementById("deckList");
+
+    if (appData.decks.length === 0) {
+        list.innerHTML = `
+            <div class="empty">
+                まだカード束がありません。<br>
+                新しいカード束を作ってみよう。
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = "";
+
+    [...appData.decks].reverse().forEach(deck => {
+        const div = document.createElement("div");
+        div.className = "deck";
+
+        const total = deck.cards.length;
+        const phases = deck.cards.reduce((sum, card) => sum + card.phase, 0);
+
+        div.innerHTML = `
+            <div class="deck-info">
+                <div class="deck-name">${escapeHtml(deck.name)}</div>
+                <div class="deck-count">${total}枚　・　平均Phase ${total ? (phases / total).toFixed(1) : 0}</div>
+            </div>
+            <button class="deck-button">暗記する</button>
+        `;
+
+        div.querySelector(".deck-button").addEventListener("click", () => {
+            startStudy(deck.id);
+        });
+
+        list.appendChild(div);
+    });
+
+    updateStats();
+}
+
+function updateStats() {
+    const deckCount = appData.decks.length;
+    let cardCount = 0;
+    let learningCount = 0;
+
+    appData.decks.forEach(deck => {
+        cardCount += deck.cards.length;
+        deck.cards.forEach(card => {
+            if (card.phase < 5) learningCount++;
+        });
+    });
+
+    document.getElementById("deckCount").textContent = deckCount;
+    document.getElementById("cardCount").textContent = cardCount;
+    document.getElementById("phaseCount").textContent = learningCount;
+}
+
+function startCreate() {
+    document.getElementById("cardInput").value = "";
+    document.getElementById("pairDelimiter").value = " ";
+    document.getElementById("cardDelimiter").value = "newline";
+    document.getElementById("pairCustom").value = "";
+    document.getElementById("cardCustom").value = "";
+    updateCustomInputs();
+    updatePreview();
+    showScreen("create");
+}
+
+function updateCustomInputs() {
+    const pairCustom = document.getElementById("pairCustom");
+    const cardCustom = document.getElementById("cardCustom");
+
+    pairCustom.classList.toggle(
+        "show",
+        document.getElementById("pairDelimiter").value === "custom"
+    );
+
+    cardCustom.classList.toggle(
+        "show",
+        document.getElementById("cardDelimiter").value === "custom"
+    );
+}
+
+function prepareSave() {
+    createdCards = parseCards();
+
+    if (createdCards.length === 0) {
+        alert("カードを作るための内容を入力してください。");
+        return;
+    }
+
+    if (createdCards.some(card => !card.front || !card.back)) {
+        alert("表と裏の両方が入っていないカードがあります。区切り設定を確認してください。");
+        return;
+    }
+
+    document.getElementById("createdCardSummary").innerHTML = `
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px;">
+            ${createdCards.length}枚のカード
+        </div>
+        <div style="font-size:13px;color:#7b8495;">
+            作成したカードは保存され、いつでも暗記できます。
+        </div>
+    `;
+
+    document.getElementById("deckNameInput").value = "";
+    showScreen("name");
+}
+
+function saveNewDeck() {
+    const name = document.getElementById("deckNameInput").value.trim();
+
+    if (!name) {
+        alert("カード束の名前を入力してください。");
+        return;
+    }
+
+    const deck = {
+        id: Date.now().toString(),
+        name,
+        createdAt: Date.now(),
+        cards: createdCards.map((card, index) => ({
+            id: `${Date.now()}_${index}_${Math.random().toString(36).slice(2)}`,
+            front: card.front,
+            back: card.back,
+            phase: 1,
+            reviews: 0
+        }))
+    };
+
+    appData.decks.push(deck);
+    saveData();
+    renderDeckList();
+
+    startStudy(deck.id);
+}
+
+function weightedShuffle(cards) {
+    const result = [];
+
+    cards.forEach(card => {
+        let weight = 6 - Math.min(card.phase, 5);
+
+        if (weight < 1) weight = 1;
+
+        for (let i = 0; i < weight; i++) {
+            result.push(card);
+        }
+    });
+
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+    }
+
+    const unique = [];
+    const used = new Set();
+
+    for (const card of result) {
+        if (!used.has(card.id)) {
+            used.add(card.id);
+            unique.push(card);
+        }
+    }
+
+    return unique;
+}
+
+function startStudy(deckId) {
+    const deck = appData.decks.find(d => d.id === deckId);
+    if (!deck || deck.cards.length === 0) return;
+
+    currentDeckId = deckId;
+    currentCards = deck.cards;
+    studyQueue = weightedShuffle(currentCards);
+    currentCardIndex = 0;
+
+    document.getElementById("studyDeckName").textContent = deck.name;
+
+    showScreen("study");
+    showCurrentCard();
+}
+
+function showCurrentCard() {
+    if (currentCardIndex >= studyQueue.length) {
+        finishStudy();
+        return;
+    }
+
+    const card = studyQueue[currentCardIndex];
+
+    document.getElementById("frontText").textContent = card.front;
+    document.getElementById("backText").textContent = card.back;
+    document.getElementById("flashcard").classList.remove("flipped");
+
+    const percent = (currentCardIndex / studyQueue.length) * 100;
+    document.getElementById("progressBar").style.width = `${percent}%`;
+
+    document.getElementById("studyPhase").textContent = `Phase ${card.phase}`;
+    document.getElementById("studyMessage").textContent =
+        `${currentCardIndex + 1} / ${studyQueue.length}`;
+}
+
+function flipCard() {
+    document.getElementById("flashcard").classList.toggle("flipped");
+}
+
+function rateCard(known) {
+    const card = studyQueue[currentCardIndex];
+
+    if (!card) return;
+
+    const deck = appData.decks.find(d => d.id === currentDeckId);
+    if (!deck) return;
+
+    const savedCard = deck.cards.find(c => c.id === card.id);
+    if (!savedCard) return;
+
+    if (known) {
+        savedCard.phase = Math.min(5, savedCard.phase + 1);
+    } else {
+        savedCard.phase = Math.max(1, savedCard.phase - 1);
+    }
+
+    savedCard.reviews++;
+
+    saveData();
+
+    currentCardIndex++;
+
+    showCurrentCard();
+}
+
+function finishStudy() {
+    const deck = appData.decks.find(d => d.id === currentDeckId);
+
+    if (!deck) return;
+
+    const average = deck.cards.reduce((sum, card) => sum + card.phase, 0) / deck.cards.length;
+
+    document.getElementById("completeText").innerHTML = `
+        <div style="font-size:16px;margin-bottom:8px;">
+            ${escapeHtml(deck.name)}
+        </div>
+        <div style="color:#697386;font-size:14px;line-height:1.7;">
+            今回の学習：${studyQueue.length}枚<br>
+            平均Phase：${average.toFixed(1)}
+        </div>
+    `;
+
+    document.getElementById("completeModal").classList.add("show");
+    saveData();
+}
+
+function closeComplete() {
+    document.getElementById("completeModal").classList.remove("show");
+    renderDeckList();
+    showScreen("home");
+}
+
+function restartCurrentDeck() {
+    document.getElementById("completeModal").classList.remove("show");
+    startStudy(currentDeckId);
+}
+
+document.getElementById("createButton").addEventListener("click", startCreate);
+
+document.getElementById("homeButton").addEventListener("click", () => {
+    renderDeckList();
+    showScreen("home");
+});
+
+document.getElementById("cancelCreateButton").addEventListener("click", () => {
+    showScreen("home");
+});
+
+document.getElementById("cancelNameButton").addEventListener("click", () => {
+    showScreen("create");
+});
+
+document.getElementById("makeCardsButton").addEventListener("click", prepareSave);
+
+document.getElementById("saveDeckButton").addEventListener("click", saveNewDeck);
+
+document.getElementById("exitStudyButton").addEventListener("click", () => {
+    renderDeckList();
+    showScreen("home");
+});
+
+document.getElementById("completeHomeButton").addEventListener("click", closeComplete);
+
+document.getElementById("completeAgainButton").addEventListener("click", restartCurrentDeck);
+
+document.getElementById("flashcard").addEventListener("click", flipCard);
+
+document.getElementById("unknownButton").addEventListener("click", () => {
+    rateCard(false);
+});
+
+document.getElementById("knownButton").addEventListener("click", () => {
+    rateCard(true);
+});
+
+document.getElementById("cardInput").addEventListener("input", updatePreview);
+
+document.getElementById("pairDelimiter").addEventListener("change", () => {
+    updateCustomInputs();
+    updatePreview();
+});
+
+document.getElementById("cardDelimiter").addEventListener("change", () => {
+    updateCustomInputs();
+    updatePreview();
+});
+
+document.getElementById("pairCustom").addEventListener("input", updatePreview);
+
+document.getElementById("cardCustom").addEventListener("input", updatePreview);
+
+const cardArea = document.getElementById("cardArea");
+
+cardArea.addEventListener("touchstart", event => {
+    if (event.touches.length !== 1) return;
+
+    isDragging = true;
+    dragStartX = event.touches[0].clientX;
+    dragStartY = event.touches[0].clientY;
+}, { passive: true });
+
+cardArea.addEventListener("touchend", event => {
+    if (!isDragging) return;
+
+    isDragging = false;
+
+    const endX = event.changedTouches[0].clientX;
+    const endY = event.changedTouches[0].clientY;
+
+    const dx = endX - dragStartX;
+    const dy = endY - dragStartY;
+
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy)) return;
+
+    if (dx > 0) {
+        rateCard(true);
+    } else {
+        rateCard(false);
+    }
+}, { passive: true });
+
+renderDeckList();
+updateCustomInputs();
+updatePreview();
+</script>
+
+</body>
+</html>
