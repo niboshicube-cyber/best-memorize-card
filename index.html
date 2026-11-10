@@ -1238,26 +1238,45 @@ function escapeHtml(text) {
 }
 
 function getPairDelimiter(prefix = "") {
+    const selectId =
+        prefix
+            ? prefix + "PairDelimiter"
+            : "pairDelimiter";
+
+    const customId =
+        prefix
+            ? prefix + "PairCustom"
+            : "pairCustom";
+
     const select =
         document.getElementById(
-            prefix + "PairDelimiter"
+            selectId
         );
 
     const value = select.value;
 
     if (value === "custom") {
         return document.getElementById(
-            prefix + "PairCustom"
+            customId
         ).value;
     }
 
     return value;
 }
-
 function getCardDelimiter(prefix = "") {
+    const selectId =
+        prefix
+            ? prefix + "CardDelimiter"
+            : "cardDelimiter";
+
+    const customId =
+        prefix
+            ? prefix + "CardCustom"
+            : "cardCustom";
+
     const select =
         document.getElementById(
-            prefix + "CardDelimiter"
+            selectId
         );
 
     const value = select.value;
@@ -1272,7 +1291,7 @@ function getCardDelimiter(prefix = "") {
 
     if (value === "custom") {
         return document.getElementById(
-            prefix + "CardCustom"
+            customId
         ).value;
     }
 
@@ -1456,24 +1475,44 @@ function updateEditPreview() {
 }
 
 function updateCustomInputs(prefix = "") {
+    const pairSelectId =
+        prefix
+            ? prefix + "PairDelimiter"
+            : "pairDelimiter";
+
+    const cardSelectId =
+        prefix
+            ? prefix + "CardDelimiter"
+            : "cardDelimiter";
+
+    const pairCustomId =
+        prefix
+            ? prefix + "PairCustom"
+            : "pairCustom";
+
+    const cardCustomId =
+        prefix
+            ? prefix + "CardCustom"
+            : "cardCustom";
+
     const pairSelect =
         document.getElementById(
-            prefix + "PairDelimiter"
+            pairSelectId
         );
 
     const cardSelect =
         document.getElementById(
-            prefix + "CardDelimiter"
+            cardSelectId
         );
 
     const pairCustom =
         document.getElementById(
-            prefix + "PairCustom"
+            pairCustomId
         );
 
     const cardCustom =
         document.getElementById(
-            prefix + "CardCustom"
+            cardCustomId
         );
 
     pairCustom.classList.toggle(
