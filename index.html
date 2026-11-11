@@ -190,36 +190,6 @@ input[type="text"]:focus {
     min-width: 0;
 }
 
-.preview-select {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: #697386;
-    padding-bottom: 4px;
-}
-
-.preview-select input {
-    width: 17px;
-    height: 17px;
-    margin: 0;
-}
-
-.preview-select {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    color: #7b8495;
-}
-
-.preview-select input {
-    width: 15px;
-    height: 15px;
-}
-
 .preview-label {
     font-size: 10px;
     color: #8a93a5;
@@ -624,8 +594,7 @@ input[type="text"]:focus {
     <button
         type="button"
         class="primary"
-        id="createButton"
-        onclick="showScreen('create'); startCreate();">
+        id="createButton">
         ＋ 新しいカード束を作る
     </button>
     <div style="height:20px"></div>
@@ -758,39 +727,36 @@ orange オレンジ"></textarea>
             プレビュー
         </div>
 
-        <div
-            style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+        <div class="preview" id="preview"></div>
 
-            <button
-                type="button"
-                class="secondary"
-                id="editSwapSelectedCardsButton"
-                style="width:auto;padding:10px 13px;">
-                選択したカードを表裏入れ替え
-            </button>
+    </div>
 
-            <button
-                type="button"
-                class="secondary"
-                id="editSwapAllCardsButton"
-                style="width:auto;padding:10px 13px;">
-                全カードを表裏入れ替え
-            </button>
+    <div
+        style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
 
-            <button
-                type="button"
-                class="danger"
-                id="deleteSelectedEditCardsButton"
-                style="width:auto;padding:10px 13px;">
-                選択したカードを削除
-            </button>
+        <button
+            type="button"
+            class="secondary"
+            id="swapSelectedCardsButton"
+            style="width:auto;padding:10px 13px;">
+            選択したカードを表裏入れ替え
+        </button>
 
-        </div>
+        <button
+            type="button"
+            class="secondary"
+            id="swapAllCardsButton"
+            style="width:auto;padding:10px 13px;">
+            全カードを表裏入れ替え
+        </button>
 
-        <div
-            class="preview"
-            id="createPreview">
-        </div>
+        <button
+            type="button"
+            class="danger"
+            id="deleteSelectedCardsButton"
+            style="width:auto;padding:10px 13px;">
+            選択したカードを削除
+        </button>
 
     </div>
 
@@ -1135,38 +1101,38 @@ orange オレンジ"></textarea>
             </div>
 
             <div
-                style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
-
-                <button
-                    type="button"
-                    class="secondary"
-                    id="editSwapSelectedCardsButton"
-                    style="width:auto;padding:10px 13px;">
-                    選択したカードを表裏入れ替え
-                </button>
-
-                <button
-                    type="button"
-                    class="secondary"
-                    id="editSwapAllCardsButton"
-                    style="width:auto;padding:10px 13px;">
-                    全カードを表裏入れ替え
-                </button>
-
-                <button
-                    type="button"
-                    class="danger"
-                    id="deleteSelectedEditCardsButton"
-                    style="width:auto;padding:10px 13px;">
-                    選択したカードを削除
-                </button>
-
-            </div>
-
-            <div
                 class="preview"
                 id="editPreview">
             </div>
+
+        </div>
+
+        <div
+            style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+
+            <button
+                type="button"
+                class="secondary"
+                id="editSwapSelectedCardsButton"
+                style="width:auto;padding:10px 13px;">
+                選択したカードを表裏入れ替え
+            </button>
+
+            <button
+                type="button"
+                class="secondary"
+                id="editSwapAllCardsButton"
+                style="width:auto;padding:10px 13px;">
+                全カードを表裏入れ替え
+            </button>
+
+            <button
+                type="button"
+                class="danger"
+                id="deleteSelectedEditCardsButton"
+                style="width:auto;padding:10px 13px;">
+                選択したカードを削除
+            </button>
 
         </div>
 
@@ -1234,7 +1200,6 @@ let studyQueue = [];
 let currentCardIndex = 0;
 let editingDeckId = null;
 let deletingDeckId = null;
-let lastCreateDuplicateSignature = "";
 let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
@@ -1482,25 +1447,20 @@ function renderPreview(
     if (cards.length === 0) {
         preview.innerHTML =
             '<div style="color:#8a93a5;font-size:13px;">ここにカードのプレビューが表示されます。</div>';
-
         return;
     }
 
+    const selectClass =
+        previewId === "editPreview"
+            ? "edit-card-select"
+            : "create-card-select";
+
     cards.slice(0, 100).forEach(
         (card, index) => {
-
             const div =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
-            div.className =
-                "preview-card";
-
-            const selectClass =
-                previewId === "editPreview"
-                    ? "edit-card-select"
-                    : "create-card-select";
+            div.className = "preview-card";
 
             div.innerHTML = `
                 <div class="preview-select">
@@ -1538,30 +1498,127 @@ function renderPreview(
 
     if (cards.length > 100) {
         const more =
-            document.createElement(
-                "div"
-            );
-
-        more.style.textAlign =
-            "center";
-
-        more.style.color =
-            "#7b8495";
-
-        more.style.fontSize =
-            "12px";
-
-        more.style.padding =
-            "8px";
-
+            document.createElement("div");
+        more.style.textAlign = "center";
+        more.style.color = "#7b8495";
+        more.style.fontSize = "12px";
+        more.style.padding = "8px";
         more.textContent =
             `ほか ${cards.length - 100} 枚`;
-
-        preview.appendChild(
-            more
-        );
+        preview.appendChild(more);
     }
 }
+
+function getCreateCards() {
+    return parseCardText(
+        document.getElementById("cardInput").value
+    );
+}
+
+function writeCreateCards(cards) {
+    const pairDelimiter = getPairDelimiter();
+    const cardDelimiter = getCardDelimiter();
+    document.getElementById("cardInput").value =
+        cards.map(card => card.front + pairDelimiter + card.back).join(cardDelimiter);
+    updateCreatePreview();
+}
+
+function getEditCards() {
+    return parseCardText(
+        document.getElementById("editCardInput").value,
+        "edit"
+    );
+}
+
+function writeEditCards(cards) {
+    const pairDelimiter = getPairDelimiter("edit");
+    const cardDelimiter = getCardDelimiter("edit");
+    document.getElementById("editCardInput").value =
+        cards.map(card => card.front + pairDelimiter + card.back).join(cardDelimiter);
+    updateEditPreview();
+}
+
+function swapCards(cards, indexes) {
+    const indexSet = indexes === null ? null : new Set(indexes);
+    return cards.map((card, index) => {
+        if (indexSet === null || indexSet.has(index)) {
+            return {
+                front: card.back,
+                back: card.front
+            };
+        }
+        return card;
+    });
+}
+
+function swapCreateCards(all) {
+    const cards = getCreateCards();
+    if (all) {
+        writeCreateCards(swapCards(cards, null));
+        return;
+    }
+    const indexes = [...document.querySelectorAll(".create-card-select:checked")].map(
+        checkbox => Number(checkbox.dataset.index)
+    );
+    if (indexes.length === 0) {
+        alert("表裏を入れ替えるカードを選択してください。");
+        return;
+    }
+    writeCreateCards(swapCards(cards, indexes));
+}
+
+function deleteSelectedCreateCards() {
+    const cards = getCreateCards();
+    const indexes = [...document.querySelectorAll(".create-card-select:checked")].map(
+        checkbox => Number(checkbox.dataset.index)
+    );
+    if (indexes.length === 0) {
+        alert("削除するカードを選択してください。");
+        return;
+    }
+    if (!confirm(`${indexes.length}枚のカードを削除しますか？`)) {
+        return;
+    }
+    const deleteSet = new Set(indexes);
+    writeCreateCards(
+        cards.filter((_, index) => !deleteSet.has(index))
+    );
+}
+
+function swapEditCards(all) {
+    const cards = getEditCards();
+    if (all) {
+        writeEditCards(swapCards(cards, null));
+        return;
+    }
+    const indexes = [...document.querySelectorAll(".edit-card-select:checked")].map(
+        checkbox => Number(checkbox.dataset.index)
+    );
+    if (indexes.length === 0) {
+        alert("表裏を入れ替えるカードを選択してください。");
+        return;
+    }
+    writeEditCards(swapCards(cards, indexes));
+}
+
+function deleteSelectedEditCards() {
+    const cards = getEditCards();
+    const indexes = [...document.querySelectorAll(".edit-card-select:checked")].map(
+        checkbox => Number(checkbox.dataset.index)
+    );
+    if (indexes.length === 0) {
+        alert("削除するカードを選択してください。");
+        return;
+    }
+    if (!confirm(`${indexes.length}枚のカードを削除しますか？`)) {
+        return;
+    }
+    const deleteSet = new Set(indexes);
+    writeEditCards(
+        cards.filter((_, index) => !deleteSet.has(index))
+    );
+}
+
 function updateCreatePreview() {
     const cards =
         parseCardText(
@@ -1570,110 +1627,8 @@ function updateCreatePreview() {
             ).value
         );
 
-    const groups = new Map();
-
-    cards.forEach((card, index) => {
-        const key =
-            card.front +
-            "\u0000" +
-            card.back;
-
-        if (!groups.has(key)) {
-            groups.set(key, []);
-        }
-
-        groups.get(key).push(index);
-    });
-
-    const duplicates =
-        [...groups.entries()]
-            .filter(
-                ([key, indexes]) =>
-                    indexes.length > 1
-            );
-
-    if (duplicates.length === 0) {
-        lastCreateDuplicateSignature = "";
-    } else {
-        const signature =
-            duplicates
-                .map(
-                    ([key, indexes]) =>
-                        key +
-                        "\u0001" +
-                        indexes.length
-                )
-                .join("\u0002");
-
-        if (
-            signature !==
-            lastCreateDuplicateSignature
-        ) {
-            lastCreateDuplicateSignature =
-                signature;
-
-            const [
-                key
-            ] = duplicates[0];
-
-            const [
-                front,
-                back
-            ] = key.split("\u0000");
-
-            const shouldDelete =
-                confirm(
-                    `表「${front}」、裏「${back}」のカードが複数存在します。削除しますか？`
-                );
-
-            if (shouldDelete) {
-                const duplicateIndexes =
-                    new Set(
-                        duplicates
-                            .flatMap(
-                                ([, indexes]) =>
-                                    indexes.slice(1)
-                            )
-                    );
-
-                const pairDelimiter =
-                    getPairDelimiter();
-
-                const cardDelimiter =
-                    getCardDelimiter();
-
-                const newText =
-                    cards
-                        .filter(
-                            (_, index) =>
-                                !duplicateIndexes.has(
-                                    index
-                                )
-                        )
-                        .map(
-                            card =>
-                                card.front +
-                                pairDelimiter +
-                                card.back
-                        )
-                        .join(cardDelimiter);
-
-                document.getElementById(
-                    "cardInput"
-                ).value = newText;
-
-                lastCreateDuplicateSignature =
-                    "";
-
-                updateCreatePreview();
-
-                return;
-            }
-        }
-    }
-
     renderPreview(
-        "createPreview",
+        "preview",
         cards
     );
 }
@@ -1687,333 +1642,10 @@ function updateEditPreview() {
             "edit"
         );
 
-    const deck =
-        appData.decks.find(
-            d =>
-                d.id ===
-                editingDeckId
-        );
-
-    const phaseMap =
-        new Map(
-            (deck ? deck.cards : []).map(
-                card => [
-                    card.front +
-                    "\u0000" +
-                    card.back,
-                    card.phase
-                ]
-            )
-        );
-
     renderPreview(
         "editPreview",
-        cards,
-        card =>
-            phaseMap.has(
-                card.front +
-                "\u0000" +
-                card.back
-            )
-                ? phaseMap.get(
-                    card.front +
-                    "\u0000" +
-                    card.back
-                )
-                : 1
-    );
-}
-
-function getEditCards() {
-    return parseCardText(
-        document.getElementById(
-            "editCardInput"
-        ).value,
-        "edit"
-    );
-}
-
-function writeEditCards(cards) {
-    const pairDelimiter =
-        getPairDelimiter("edit");
-
-    const cardDelimiter =
-        getCardDelimiter("edit");
-
-    document.getElementById(
-        "editCardInput"
-    ).value =
         cards
-            .map(
-                card =>
-                    card.front +
-                    pairDelimiter +
-                    card.back
-            )
-            .join(cardDelimiter);
-
-    updateEditPreview();
-}
-
-function getCreateCards() {
-    return parseCardText(
-        document.getElementById(
-            "cardInput"
-        ).value
     );
-}
-
-function writeCreateCards(cards) {
-    const pairDelimiter =
-        getPairDelimiter();
-
-    const cardDelimiter =
-        getCardDelimiter();
-
-    document.getElementById(
-        "cardInput"
-    ).value =
-        cards
-            .map(
-                card =>
-                    card.front +
-                    pairDelimiter +
-                    card.back
-            )
-            .join(cardDelimiter);
-
-    updateCreatePreview();
-}
-
-function swapCreateCards(
-    swapAll = false
-) {
-    const cards =
-        getCreateCards();
-
-    if (cards.length === 0) {
-        return;
-    }
-
-    let indexes = [];
-
-    if (swapAll) {
-
-        indexes =
-            cards.map(
-                (_, index) =>
-                    index
-            );
-
-    } else {
-
-        indexes =
-            [
-                ...document.querySelectorAll(
-                    ".create-card-select:checked"
-                )
-            ].map(
-                checkbox =>
-                    Number(
-                        checkbox.dataset
-                            .index
-                    )
-            );
-
-        if (indexes.length === 0) {
-            alert(
-                "表裏を入れ替えるカードを選択してください。"
-            );
-
-            return;
-        }
-    }
-
-    indexes.forEach(index => {
-
-        const temp =
-            cards[index].front;
-
-        cards[index].front =
-            cards[index].back;
-
-        cards[index].back =
-            temp;
-
-    });
-
-    writeCreateCards(cards);
-}
-
-function deleteSelectedCreateCards() {
-    const cards =
-        getCreateCards();
-
-    const indexes =
-        [
-            ...document.querySelectorAll(
-                ".create-card-select:checked"
-            )
-        ].map(
-            checkbox =>
-                Number(
-                    checkbox.dataset
-                        .index
-                )
-        );
-
-    if (indexes.length === 0) {
-        alert(
-            "削除するカードを選択してください。"
-        );
-
-        return;
-    }
-
-    const shouldDelete =
-        confirm(
-            `${indexes.length}枚のカードを削除しますか？`
-        );
-
-    if (!shouldDelete) {
-        return;
-    }
-
-    const deleteSet =
-        new Set(indexes);
-
-    const newCards =
-        cards.filter(
-            (_, index) =>
-                !deleteSet.has(index)
-        );
-
-    writeCreateCards(newCards);
-}
-
-function deleteSelectedEditCards() {
-    const cards =
-        getEditCards();
-
-    const indexes =
-        [
-            ...document.querySelectorAll(
-                ".edit-card-select:checked"
-            )
-        ].map(
-            checkbox =>
-                Number(
-                    checkbox.dataset
-                        .index
-                )
-        );
-
-    if (indexes.length === 0) {
-        alert(
-            "削除するカードを選択してください。"
-        );
-
-        return;
-    }
-
-    const shouldDelete =
-        confirm(
-            `${indexes.length}枚のカードを削除しますか？`
-        );
-
-    if (!shouldDelete) {
-        return;
-    }
-
-    const deleteSet =
-        new Set(indexes);
-
-    const newCards =
-        cards.filter(
-            (_, index) =>
-                !deleteSet.has(index)
-        );
-
-    writeEditCards(newCards);
-}
-
-function swapEditCards(
-    swapAll = false
-) {
-    const input =
-        document.getElementById(
-            "editCardInput"
-        );
-
-    const cards =
-        parseCardText(
-            input.value,
-            "edit"
-        );
-
-    if (cards.length === 0) {
-        return;
-    }
-
-    let indexes = [];
-
-    if (swapAll) {
-        indexes =
-            cards.map(
-                (_, index) =>
-                    index
-            );
-    } else {
-        indexes =
-            [
-                ...document.querySelectorAll(
-                    ".edit-card-select:checked"
-                )
-            ].map(
-                checkbox =>
-                    Number(
-                        checkbox.dataset
-                            .index
-                    )
-            );
-
-        if (indexes.length === 0) {
-            alert(
-                "表裏を入れ替えるカードを選択してください。"
-            );
-
-            return;
-        }
-    }
-
-    indexes.forEach(index => {
-        const front =
-            cards[index].front;
-
-        cards[index].front =
-            cards[index].back;
-
-        cards[index].back =
-            front;
-    });
-
-    const pairDelimiter =
-        getPairDelimiter("edit");
-
-    const cardDelimiter =
-        getCardDelimiter("edit");
-
-    input.value =
-        cards
-            .map(
-                card =>
-                    card.front +
-                    pairDelimiter +
-                    card.back
-            )
-            .join(cardDelimiter);
-
-    updateEditPreview();
 }
 
 function updateCustomInputs(prefix = "") {
@@ -2600,6 +2232,16 @@ function startStudy(
         return;
     }
 
+    deck.cards.forEach(card => {
+        if (card.dueAt === undefined || card.dueAt === null || !Number.isFinite(Number(card.dueAt))) {
+            card.dueAt = 0;
+        }
+
+        if (card.phase === undefined || card.phase === null) {
+            card.phase = 1;
+        }
+    });
+
     currentDeckId = deckId;
 
     let cards;
@@ -2637,28 +2279,6 @@ function startStudy(
     showCurrentCard();
 }
 
-function restoreStudyContent() {
-    const content =
-        document.getElementById(
-            "studyContent"
-        );
-
-    const empty =
-        document.getElementById(
-            "studyEmpty"
-        );
-
-    if (empty) {
-        empty.remove();
-    }
-
-    Array.from(
-        content.children
-    ).forEach(child => {
-        child.style.display = "";
-    });
-}
-
 function showNoDueCards(deck) {
     showScreen("study");
 
@@ -2672,63 +2292,47 @@ function showNoDueCards(deck) {
     ).textContent =
         "今日の復習はありません";
 
-    const content =
-        document.getElementById(
-            "studyContent"
-        );
+    document.getElementById(
+        "studyContent"
+    ).innerHTML = `
+        <div class="study-empty">
 
-    Array.from(
-        content.children
-    ).forEach(child => {
-        child.style.display = "none";
-    });
+            <div class="study-empty-title">
+                今日はここまで！
+            </div>
 
-    const empty =
-        document.createElement("div");
+            <div class="study-empty-text">
+                現在、復習する期限になっているカードはありません。<br>
+                もう一度練習したい場合は、全カードを復習できます。
+            </div>
 
-    empty.id = "studyEmpty";
-    empty.className = "study-empty";
+            <button
+                type="button"
+                class="primary"
+                id="studyAllButton">
+                全カードを今すぐ復習
+            </button>
 
-    empty.innerHTML = `
-        <div class="study-empty-title">
-            今日はここまで！
+            <div style="height:10px"></div>
+
+            <button
+                type="button"
+                class="secondary"
+                id="studyHomeButton">
+                ホームへ
+            </button>
+
         </div>
-
-        <div class="study-empty-text">
-            現在、復習する期限になっているカードはありません。<br>
-            もう一度練習したい場合は、全カードを復習できます。
-        </div>
-
-        <button
-            type="button"
-            class="primary"
-            id="studyAllButton">
-            全カードを今すぐ復習
-        </button>
-
-        <div style="height:10px"></div>
-
-        <button
-            type="button"
-            class="secondary"
-            id="studyHomeButton">
-            ホームへ
-        </button>
     `;
-
-    content.appendChild(empty);
 
     document.getElementById(
         "studyAllButton"
     ).addEventListener(
         "click",
-        () => {
-            restoreStudyContent();
-            startStudy(
-                deck.id,
-                true
-            );
-        }
+        () => startStudy(
+            deck.id,
+            true
+        )
     );
 
     document.getElementById(
@@ -2736,7 +2340,6 @@ function showNoDueCards(deck) {
     ).addEventListener(
         "click",
         () => {
-            restoreStudyContent();
             renderDeckList();
             showScreen("home");
         }
@@ -2760,73 +2363,48 @@ function showCurrentCard() {
     const card =
         item.card;
 
-    const flashcard =
-        document.getElementById(
-            "flashcard"
-        );
+    document.getElementById(
+        "frontText"
+    ).textContent =
+        card.front;
 
-    const updateCard =
-        () => {
-            document.getElementById(
-                "frontText"
-            ).textContent =
-                card.front;
+    document.getElementById(
+        "backText"
+    ).textContent =
+        card.back;
 
-            document.getElementById(
-                "backText"
-            ).textContent =
-                card.back;
+    document.getElementById(
+        "flashcard"
+    ).classList.remove(
+        "flipped"
+    );
 
-            flashcard.classList.remove(
-                "flipped"
-            );
+    const remaining =
+        studyQueue.length -
+        currentCardIndex;
 
-            const remaining =
-                studyQueue.length -
-                currentCardIndex;
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        `${Math.min(
+            100,
+            (currentCardIndex /
+                Math.max(
+                    1,
+                    studyQueue.length
+                )) *
+                100
+        )}%`;
 
-            document.getElementById(
-                "progressBar"
-            ).style.width =
-                `${Math.min(
-                    100,
-                    (currentCardIndex /
-                        Math.max(
-                            1,
-                            studyQueue.length
-                        )) *
-                        100
-                )}%`;
+    document.getElementById(
+        "studyPhase"
+    ).textContent =
+        `Phase ${card.phase}`;
 
-            document.getElementById(
-                "studyPhase"
-            ).textContent =
-                `Phase ${card.phase}`;
-
-            document.getElementById(
-                "studyMessage"
-            ).textContent =
-                `${currentCardIndex + 1} / ${studyQueue.length}　残り ${remaining}枚`;
-        };
-
-    if (
-        flashcard.classList.contains(
-            "flipped"
-        )
-    ) {
-        flashcard.classList.remove(
-            "flipped"
-        );
-
-        setTimeout(
-            updateCard,
-            170
-        );
-
-        return;
-    }
-
-    updateCard();
+    document.getElementById(
+        "studyMessage"
+    ).textContent =
+        `${currentCardIndex + 1} / ${studyQueue.length}　残り ${remaining}枚`;
 }
 
 function flipCard() {
@@ -2836,36 +2414,6 @@ function flipCard() {
         "flipped"
     );
 }
-
-document.addEventListener(
-    "keydown",
-    event => {
-        if (
-            !document.getElementById(
-                "studyScreen"
-            ).classList.contains("active")
-        ) {
-            return;
-        }
-
-        if (event.code === "Space") {
-            event.preventDefault();
-            flipCard();
-            return;
-        }
-
-        if (event.key === "ArrowRight") {
-            event.preventDefault();
-            rateCard(true);
-            return;
-        }
-
-        if (event.key === "ArrowLeft") {
-            event.preventDefault();
-            rateCard(false);
-        }
-    }
-);
 
 function getIntervalMs(phase) {
     const intervals = {
@@ -3067,252 +2615,71 @@ function restartCurrentDeck() {
     );
 }
 
-document.getElementById(
-    "homeButton"
-).addEventListener(
-    "click",
-    () => {
-        renderDeckList();
-        showScreen("home");
+function bindEvent(
+    id,
+    event,
+    handler
+) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.addEventListener(event, handler);
     }
-);
+}
 
-document.getElementById(
-    "cancelCreateButton"
-).addEventListener(
-    "click",
-    () => {
-        showScreen("home");
-    }
-);
-
-document.getElementById(
-    "cancelNameButton"
-).addEventListener(
-    "click",
-    () => {
-        showScreen("create");
-    }
-);
-
-document.getElementById(
-    "makeCardsButton"
-).addEventListener(
-    "click",
-    prepareSave
-);
-
-document.getElementById(
-    "saveDeckButton"
-).addEventListener(
-    "click",
-    saveNewDeck
-);
-
-document.getElementById(
-    "exitStudyButton"
-).addEventListener(
-    "click",
-    () => {
-        renderDeckList();
-        showScreen("home");
-    }
-);
-
-document.getElementById(
-    "completeHomeButton"
-).addEventListener(
-    "click",
-    closeComplete
-);
-
-document.getElementById(
-    "completeAgainButton"
-).addEventListener(
-    "click",
-    restartCurrentDeck
-);
-
-document.getElementById(
-    "flashcard"
-).addEventListener(
-    "click",
-    flipCard
-);
-
-document.getElementById(
-    "unknownButton"
-).addEventListener(
-    "click",
-    () => rateCard(false)
-);
-
-document.getElementById(
-    "knownButton"
-).addEventListener(
-    "click",
-    () => rateCard(true)
-);
-
-document.getElementById(
-    "cardInput"
-).addEventListener(
-    "input",
-    updateCreatePreview
-);
-
-document.getElementById(
-    "pairDelimiter"
-).addEventListener(
-    "change",
-    () => {
-        updateCustomInputs();
-        updateCreatePreview();
-    }
-);
-
-document.getElementById(
-    "cardDelimiter"
-).addEventListener(
-    "change",
-    () => {
-        updateCustomInputs();
-        updateCreatePreview();
-    }
-);
-
-document.getElementById(
-    "pairCustom"
-).addEventListener(
-    "input",
-    updateCreatePreview
-);
-
-document.getElementById(
-    "cardCustom"
-).addEventListener(
-    "input",
-    updateCreatePreview
-);
-
-document.getElementById(
-    "editCardInput"
-).addEventListener(
-    "input",
-    updateEditPreview
-);
-
-document.getElementById(
-    "editPairDelimiter"
-).addEventListener(
-    "change",
-    () => {
-        updateCustomInputs("edit");
-        updateEditPreview();
-    }
-);
-
-document.getElementById(
-    "editCardDelimiter"
-).addEventListener(
-    "change",
-    () => {
-        updateCustomInputs("edit");
-        updateEditPreview();
-    }
-);
-
-document.getElementById(
-    "editPairCustom"
-).addEventListener(
-    "input",
-    updateEditPreview
-);
-
-document.getElementById(
-    "editCardCustom"
-).addEventListener(
-    "input",
-    updateEditPreview
-);
-
-document.getElementById(
-    "saveEditButton"
-).addEventListener(
-    "click",
-    saveEditedDeck
-);
-
-document.getElementById(
-    "swapSelectedCardsButton"
-).addEventListener(
-    "click",
-    () => swapCreateCards(false)
-);
-
-document.getElementById(
-    "swapAllCardsButton"
-).addEventListener(
-    "click",
-    () => swapCreateCards(true)
-);
-
-document.getElementById(
-    "deleteSelectedCardsButton"
-).addEventListener(
-    "click",
-    deleteSelectedCreateCards
-);
-
-document.getElementById(
-    "editSwapSelectedCardsButton"
-).addEventListener(
-    "click",
-    () => swapEditCards(false)
-);
-
-document.getElementById(
-    "editSwapAllCardsButton"
-).addEventListener(
-    "click",
-    () => swapEditCards(true)
-);
-    
-document.getElementById(
-    "deleteSelectedEditCardsButton"
-).addEventListener(
-    "click",
-    deleteSelectedEditCards
-);
-    
-document.getElementById(
-    "cancelEditButton"
-).addEventListener(
-    "click",
-    () => {
-        document.getElementById(
-            "editModal"
-        ).classList.remove("show");
-    }
-);
-
-document.getElementById(
-    "confirmDeleteButton"
-).addEventListener(
-    "click",
-    confirmDeleteDeck
-);
-
-document.getElementById(
-    "cancelDeleteButton"
-).addEventListener(
-    "click",
-    () => {
-        document.getElementById(
-            "deleteModal"
-        ).classList.remove("show");
-    }
-);
+bindEvent("homeButton", "click", () => {
+    renderDeckList();
+    showScreen("home");
+});
+bindEvent("createButton", "click", startCreate);
+bindEvent("cancelCreateButton", "click", () => showScreen("home"));
+bindEvent("cancelNameButton", "click", () => showScreen("create"));
+bindEvent("makeCardsButton", "click", prepareSave);
+bindEvent("saveDeckButton", "click", saveNewDeck);
+bindEvent("exitStudyButton", "click", () => {
+    renderDeckList();
+    showScreen("home");
+});
+bindEvent("completeHomeButton", "click", closeComplete);
+bindEvent("completeAgainButton", "click", restartCurrentDeck);
+bindEvent("flashcard", "click", flipCard);
+bindEvent("unknownButton", "click", () => rateCard(false));
+bindEvent("knownButton", "click", () => rateCard(true));
+bindEvent("cardInput", "input", updateCreatePreview);
+bindEvent("pairDelimiter", "change", () => {
+    updateCustomInputs();
+    updateCreatePreview();
+});
+bindEvent("cardDelimiter", "change", () => {
+    updateCustomInputs();
+    updateCreatePreview();
+});
+bindEvent("pairCustom", "input", updateCreatePreview);
+bindEvent("cardCustom", "input", updateCreatePreview);
+bindEvent("editCardInput", "input", updateEditPreview);
+bindEvent("editPairDelimiter", "change", () => {
+    updateCustomInputs("edit");
+    updateEditPreview();
+});
+bindEvent("editCardDelimiter", "change", () => {
+    updateCustomInputs("edit");
+    updateEditPreview();
+});
+bindEvent("editPairCustom", "input", updateEditPreview);
+bindEvent("editCardCustom", "input", updateEditPreview);
+bindEvent("saveEditButton", "click", saveEditedDeck);
+bindEvent("cancelEditButton", "click", () => {
+    document.getElementById("editModal").classList.remove("show");
+});
+bindEvent("swapSelectedCardsButton", "click", () => swapCreateCards(false));
+bindEvent("swapAllCardsButton", "click", () => swapCreateCards(true));
+bindEvent("deleteSelectedCardsButton", "click", deleteSelectedCreateCards);
+bindEvent("editSwapSelectedCardsButton", "click", () => swapEditCards(false));
+bindEvent("editSwapAllCardsButton", "click", () => swapEditCards(true));
+bindEvent("deleteSelectedEditCardsButton", "click", deleteSelectedEditCards);
+bindEvent("confirmDeleteButton", "click", confirmDeleteDeck);
+bindEvent("cancelDeleteButton", "click", () => {
+    document.getElementById("deleteModal").classList.remove("show");
+});
 
 const cardArea =
     document.getElementById(
