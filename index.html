@@ -1691,7 +1691,7 @@ function updateCreatePreview() {
     }
 
     renderPreview(
-        "preview",
+        "createPreview",
         cards
     );
 }
@@ -3204,20 +3204,6 @@ document.getElementById(
 ).addEventListener(
     "click",
     deleteSelectedEditCards
-);
-
-document.getElementById(
-    "swapSelectedCardsButton"
-).addEventListener(
-    "click",
-    () => swapEditCards(false)
-);
-
-document.getElementById(
-    "swapAllCardsButton"
-).addEventListener(
-    "click",
-    () => swapEditCards(true)
 );
 
 document.getElementById(
