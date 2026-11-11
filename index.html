@@ -764,7 +764,7 @@ orange オレンジ"></textarea>
             <button
                 type="button"
                 class="secondary"
-                id="swapSelectedCardsButton"
+                id="editSwapSelectedCardsButton"
                 style="width:auto;padding:10px 13px;">
                 選択したカードを表裏入れ替え
             </button>
@@ -772,7 +772,7 @@ orange オレンジ"></textarea>
             <button
                 type="button"
                 class="secondary"
-                id="swapAllCardsButton"
+                id="editSwapAllCardsButton"
                 style="width:auto;padding:10px 13px;">
                 全カードを表裏入れ替え
             </button>
@@ -780,7 +780,7 @@ orange オレンジ"></textarea>
             <button
                 type="button"
                 class="danger"
-                id="deleteSelectedCardsButton"
+                id="deleteSelectedEditCardsButton"
                 style="width:auto;padding:10px 13px;">
                 選択したカードを削除
             </button>
@@ -1140,7 +1140,7 @@ orange オレンジ"></textarea>
                 <button
                     type="button"
                     class="secondary"
-                    id="swapSelectedCardsButton"
+                    id="editSwapSelectedCardsButton"
                     style="width:auto;padding:10px 13px;">
                     選択したカードを表裏入れ替え
                 </button>
@@ -1148,9 +1148,17 @@ orange オレンジ"></textarea>
                 <button
                     type="button"
                     class="secondary"
-                    id="swapAllCardsButton"
+                    id="editSwapAllCardsButton"
                     style="width:auto;padding:10px 13px;">
                     全カードを表裏入れ替え
+                </button>
+
+                <button
+                    type="button"
+                    class="danger"
+                    id="deleteSelectedEditCardsButton"
+                    style="width:auto;padding:10px 13px;">
+                    選択したカードを削除
                 </button>
 
             </div>
@@ -1745,66 +1753,6 @@ function writeEditCards(cards) {
             .join(cardDelimiter);
 
     updateEditPreview();
-}
-
-function swapEditCards(
-    swapAll = false
-) {
-    const cards =
-        getEditCards();
-
-    if (cards.length === 0) {
-        return;
-    }
-
-    let indexes = [];
-
-    if (swapAll) {
-
-        indexes =
-            cards.map(
-                (_, index) =>
-                    index
-            );
-
-    } else {
-
-        indexes =
-            [
-                ...document.querySelectorAll(
-                    ".edit-card-select:checked"
-                )
-            ].map(
-                checkbox =>
-                    Number(
-                        checkbox.dataset
-                            .index
-                    )
-            );
-
-        if (indexes.length === 0) {
-            alert(
-                "表裏を入れ替えるカードを選択してください。"
-            );
-
-            return;
-        }
-    }
-
-    indexes.forEach(index => {
-
-        const temp =
-            cards[index].front;
-
-        cards[index].front =
-            cards[index].back;
-
-        cards[index].back =
-            temp;
-
-    });
-
-    writeEditCards(cards);
 }
 
 function getCreateCards() {
@@ -3329,6 +3277,14 @@ document.getElementById(
     "click",
     () => swapEditCards(true)
 );
+    
+document.getElementById(
+    "deleteSelectedEditCardsButton"
+).addEventListener(
+    "click",
+    deleteSelectedEditCards
+);
+    
 document.getElementById(
     "cancelEditButton"
 ).addEventListener(
