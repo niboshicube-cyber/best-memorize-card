@@ -764,15 +764,15 @@ orange オレンジ"></textarea>
             <button
                 type="button"
                 class="secondary"
-                id="editSwapSelectedCardsButton"
+                id="swapSelectedCardsButton"
                 style="width:auto;padding:10px 13px;">
                 選択したカードを表裏入れ替え
-        　  </button>
+            </button>
 
             <button
                 type="button"
                 class="secondary"
-                id="editSwapAllCardsButton"
+                id="swapAllCardsButton"
                 style="width:auto;padding:10px 13px;">
                 全カードを表裏入れ替え
             </button>
@@ -1140,7 +1140,7 @@ orange オレンジ"></textarea>
                 <button
                     type="button"
                     class="secondary"
-                    id="editSwapSelectedCardsButton"
+                    id="swapSelectedCardsButton"
                     style="width:auto;padding:10px 13px;">
                     選択したカードを表裏入れ替え
                 </button>
@@ -1148,7 +1148,7 @@ orange オレンジ"></textarea>
                 <button
                     type="button"
                     class="secondary"
-                    id="editSwapAllCardsButton"
+                    id="swapAllCardsButton"
                     style="width:auto;padding:10px 13px;">
                     全カードを表裏入れ替え
                 </button>
@@ -1489,66 +1489,40 @@ function renderPreview(
             div.className =
                 "preview-card";
 
-            if (
-                previewId ===
-                "editPreview"
-            ) {
+            const selectClass =
+                previewId === "editPreview"
+                    ? "edit-card-select"
+                    : "create-card-select";
 
-                div.innerHTML = `
-                    <div class="preview-select">
-                        <input
-                            type="checkbox"
-                            class="edit-card-select"
-                            data-index="${index}">
-                        <span>このカードを選択</span>
+            div.innerHTML = `
+                <div class="preview-select">
+                    <input
+                        type="checkbox"
+                        class="${selectClass}"
+                        data-index="${index}">
+                    <span>このカードを選択</span>
+                </div>
+
+                <div class="preview-side">
+                    <div class="preview-label">
+                        表 ${index + 1}
                     </div>
 
-                    <div class="preview-side">
-                        <div class="preview-label">
-                            表 ${index + 1}
-                        </div>
+                    <div class="preview-text">
+                        ${escapeHtml(card.front)}
+                    </div>
+                </div>
 
-                        <div class="preview-text">
-                            ${escapeHtml(card.front)}
-                        </div>
+                <div class="preview-side">
+                    <div class="preview-label">
+                        裏
                     </div>
 
-                    <div class="preview-side">
-                        <div class="preview-label">
-                            裏
-                        </div>
-
-                        <div class="preview-text">
-                            ${escapeHtml(card.back)}
-                        </div>
+                    <div class="preview-text">
+                        ${escapeHtml(card.back)}
                     </div>
-                `;
-
-            } else {
-
-                div.innerHTML = `
-                    <div class="preview-side">
-                        <div class="preview-label">
-                            表 ${index + 1}
-                        </div>
-
-                        <div class="preview-text">
-                            ${escapeHtml(card.front)}
-                        </div>
-                    </div>
-
-                    <div class="preview-side">
-                        <div class="preview-label">
-                            裏
-                        </div>
-
-                        <div class="preview-text">
-                            ${escapeHtml(card.back)}
-                        </div>
-                    </div>
-                `;
-
-            }
+                </div>
+            `;
 
             preview.appendChild(div);
         }
@@ -1831,6 +1805,142 @@ function swapEditCards(
     });
 
     writeEditCards(cards);
+}
+
+function getCreateCards() {
+    return parseCardText(
+        document.getElementById(
+            "cardInput"
+        ).value
+    );
+}
+
+function writeCreateCards(cards) {
+    const pairDelimiter =
+        getPairDelimiter();
+
+    const cardDelimiter =
+        getCardDelimiter();
+
+    document.getElementById(
+        "cardInput"
+    ).value =
+        cards
+            .map(
+                card =>
+                    card.front +
+                    pairDelimiter +
+                    card.back
+            )
+            .join(cardDelimiter);
+
+    updateCreatePreview();
+}
+
+function swapCreateCards(
+    swapAll = false
+) {
+    const cards =
+        getCreateCards();
+
+    if (cards.length === 0) {
+        return;
+    }
+
+    let indexes = [];
+
+    if (swapAll) {
+
+        indexes =
+            cards.map(
+                (_, index) =>
+                    index
+            );
+
+    } else {
+
+        indexes =
+            [
+                ...document.querySelectorAll(
+                    ".create-card-select:checked"
+                )
+            ].map(
+                checkbox =>
+                    Number(
+                        checkbox.dataset
+                            .index
+                    )
+            );
+
+        if (indexes.length === 0) {
+            alert(
+                "表裏を入れ替えるカードを選択してください。"
+            );
+
+            return;
+        }
+    }
+
+    indexes.forEach(index => {
+
+        const temp =
+            cards[index].front;
+
+        cards[index].front =
+            cards[index].back;
+
+        cards[index].back =
+            temp;
+
+    });
+
+    writeCreateCards(cards);
+}
+
+function deleteSelectedCreateCards() {
+    const cards =
+        getCreateCards();
+
+    const indexes =
+        [
+            ...document.querySelectorAll(
+                ".create-card-select:checked"
+            )
+        ].map(
+            checkbox =>
+                Number(
+                    checkbox.dataset
+                        .index
+                )
+        );
+
+    if (indexes.length === 0) {
+        alert(
+            "削除するカードを選択してください。"
+        );
+
+        return;
+    }
+
+    const shouldDelete =
+        confirm(
+            `${indexes.length}枚のカードを削除しますか？`
+        );
+
+    if (!shouldDelete) {
+        return;
+    }
+
+    const deleteSet =
+        new Set(indexes);
+
+    const newCards =
+        cards.filter(
+            (_, index) =>
+                !deleteSet.has(index)
+        );
+
+    writeCreateCards(newCards);
 }
 
 function deleteSelectedEditCards() {
@@ -3186,6 +3296,27 @@ document.getElementById(
 );
 
 document.getElementById(
+    "swapSelectedCardsButton"
+).addEventListener(
+    "click",
+    () => swapCreateCards(false)
+);
+
+document.getElementById(
+    "swapAllCardsButton"
+).addEventListener(
+    "click",
+    () => swapCreateCards(true)
+);
+
+document.getElementById(
+    "deleteSelectedCardsButton"
+).addEventListener(
+    "click",
+    deleteSelectedCreateCards
+);
+
+document.getElementById(
     "editSwapSelectedCardsButton"
 ).addEventListener(
     "click",
@@ -3198,14 +3329,6 @@ document.getElementById(
     "click",
     () => swapEditCards(true)
 );
-    
-document.getElementById(
-    "deleteSelectedCardsButton"
-).addEventListener(
-    "click",
-    deleteSelectedEditCards
-);
-
 document.getElementById(
     "cancelEditButton"
 ).addEventListener(
