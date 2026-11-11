@@ -764,7 +764,7 @@ orange オレンジ"></textarea>
             <button
                 type="button"
                 class="secondary"
-                id="swapSelectedCardsButton"
+                id="editSwapSelectedCardsButton"
                 style="width:auto;padding:10px 13px;">
                 選択したカードを表裏入れ替え
         　  </button>
@@ -772,7 +772,7 @@ orange オレンジ"></textarea>
             <button
                 type="button"
                 class="secondary"
-                id="swapAllCardsButton"
+                id="editSwapAllCardsButton"
                 style="width:auto;padding:10px 13px;">
                 全カードを表裏入れ替え
             </button>
@@ -789,7 +789,7 @@ orange オレンジ"></textarea>
 
         <div
             class="preview"
-            id="editPreview">
+            id="createPreview">
         </div>
 
     </div>
@@ -1140,7 +1140,7 @@ orange オレンジ"></textarea>
                 <button
                     type="button"
                     class="secondary"
-                    id="swapSelectedCardsButton"
+                    id="editSwapSelectedCardsButton"
                     style="width:auto;padding:10px 13px;">
                     選択したカードを表裏入れ替え
                 </button>
@@ -1148,7 +1148,7 @@ orange オレンジ"></textarea>
                 <button
                     type="button"
                     class="secondary"
-                    id="swapAllCardsButton"
+                    id="editSwapAllCardsButton"
                     style="width:auto;padding:10px 13px;">
                     全カードを表裏入れ替え
                 </button>
@@ -3186,19 +3186,19 @@ document.getElementById(
 );
 
 document.getElementById(
-    "swapSelectedCardsButton"
+    "editSwapSelectedCardsButton"
 ).addEventListener(
     "click",
     () => swapEditCards(false)
 );
 
 document.getElementById(
-    "swapAllCardsButton"
+    "editSwapAllCardsButton"
 ).addEventListener(
     "click",
     () => swapEditCards(true)
 );
-
+    
 document.getElementById(
     "deleteSelectedCardsButton"
 ).addEventListener(
