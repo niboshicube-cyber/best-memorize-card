@@ -2292,11 +2292,39 @@ function showNoDueCards(deck) {
     ).textContent =
         "今日の復習はありません";
 
-    document.getElementById(
-        "studyContent"
-    ).innerHTML = `
-        <div class="study-empty">
+    const studyContent =
+        document.getElementById(
+            "studyContent"
+        );
 
+    document.getElementById(
+        "cardArea"
+    ).style.display = "none";
+
+    document.querySelector(
+        ".swipe-buttons"
+    ).style.display = "none";
+
+    document.getElementById(
+        "studyMessage"
+    ).style.display = "none";
+
+    let emptyArea =
+        document.getElementById(
+            "studyEmptyArea"
+        );
+
+    if (!emptyArea) {
+        emptyArea =
+            document.createElement("div");
+
+        emptyArea.id =
+            "studyEmptyArea";
+
+        emptyArea.className =
+            "study-empty";
+
+        emptyArea.innerHTML = `
             <div class="study-empty-title">
                 今日はここまで！
             </div>
@@ -2321,31 +2349,51 @@ function showNoDueCards(deck) {
                 id="studyHomeButton">
                 ホームへ
             </button>
+        `;
 
-        </div>
-    `;
+        studyContent.appendChild(
+            emptyArea
+        );
 
-    document.getElementById(
-        "studyAllButton"
-    ).addEventListener(
-        "click",
-        () => startStudy(
-            deck.id,
-            true
-        )
-    );
+        document.getElementById(
+            "studyAllButton"
+        ).addEventListener(
+            "click",
+            () => {
+                emptyArea.remove();
 
-    document.getElementById(
-        "studyHomeButton"
-    ).addEventListener(
-        "click",
-        () => {
-            renderDeckList();
-            showScreen("home");
-        }
-    );
+                document.getElementById(
+                    "cardArea"
+                ).style.display = "";
+
+                document.querySelector(
+                    ".swipe-buttons"
+                ).style.display = "";
+
+                document.getElementById(
+                    "studyMessage"
+                ).style.display = "";
+
+                startStudy(
+                    deck.id,
+                    true
+                );
+            }
+        );
+
+        document.getElementById(
+            "studyHomeButton"
+        ).addEventListener(
+            "click",
+            () => {
+                renderDeckList();
+                showScreen("home");
+            }
+        );
+    } else {
+        emptyArea.style.display = "";
+    }
 }
-
 function showCurrentCard() {
     if (
         currentCardIndex >=
