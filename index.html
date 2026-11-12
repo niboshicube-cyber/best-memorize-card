@@ -2023,13 +2023,29 @@ function openEditModal(deckId) {
     ).value =
         deck.cardCustom || "";
 
+    const pairDelimiter =
+        deck.pairDelimiter === "custom"
+            ? deck.pairCustom || ""
+            : deck.pairDelimiter || " ";
+
+    const cardDelimiter =
+        deck.cardDelimiter === "newline"
+            ? "\n"
+            : deck.cardDelimiter === "double-newline"
+                ? "\n\n"
+                : deck.cardDelimiter === "custom"
+                    ? deck.cardCustom || ""
+                    : deck.cardDelimiter || "\n";
+
     const text =
         deck.cards
             .map(
                 card =>
-                    `${card.front} ${card.back}`
+                    card.front +
+                    pairDelimiter +
+                    card.back
             )
-            .join("\n");
+            .join(cardDelimiter);
 
     document.getElementById(
         "editCardInput"
@@ -2466,6 +2482,22 @@ function showCurrentCard() {
 
     frontText.textContent = card.front;
     backText.textContent = card.back;
+
+    document.getElementById("studyPhase").textContent =
+        `フェーズ ${card.phase}`;
+
+    document.getElementById("studyMessage").textContent = "";
+
+    const progress =
+        ((currentCardIndex + 1) / studyQueue.length) * 100;
+
+    document.getElementById("progressBar").style.width =
+        `${progress}%`;
+
+    requestAnimationFrame(() => {
+        flashcard.classList.remove("no-transition");
+    });
+}
 
 function flipCard() {
     document.getElementById(
