@@ -376,6 +376,10 @@ input[type="text"]:focus {
     transform: rotateY(180deg);
 }
 
+.flashcard.no-transition {
+    transition: none !important;
+}
+
 .card-face {
     position: absolute;
     inset: 0;
@@ -1932,6 +1936,27 @@ function saveNewDeck() {
         id: now.toString(),
         name,
         createdAt: now,
+
+        pairDelimiter:
+            document.getElementById(
+                "pairDelimiter"
+            ).value,
+
+        cardDelimiter:
+            document.getElementById(
+                "cardDelimiter"
+            ).value,
+
+        pairCustom:
+            document.getElementById(
+                "pairCustom"
+            ).value,
+
+        cardCustom:
+            document.getElementById(
+                "cardCustom"
+            ).value,
+
         cards: createdCards.map(
             (card, index) => ({
                 id:
@@ -1980,19 +2005,23 @@ function openEditModal(deckId) {
 
     document.getElementById(
         "editPairDelimiter"
-    ).value = " ";
+    ).value =
+        deck.pairDelimiter || " ";
 
     document.getElementById(
         "editCardDelimiter"
-    ).value = "newline";
+    ).value =
+        deck.cardDelimiter || "newline";
 
     document.getElementById(
         "editPairCustom"
-    ).value = "";
+    ).value =
+        deck.pairCustom || "";
 
     document.getElementById(
         "editCardCustom"
-    ).value = "";
+    ).value =
+        deck.cardCustom || "";
 
     const text =
         deck.cards
@@ -2085,6 +2114,25 @@ function saveEditedDeck() {
     const now = Date.now();
 
     deck.name = name;
+    deck.pairDelimiter =
+        document.getElementById(
+            "editPairDelimiter"
+        ).value;
+
+    deck.cardDelimiter =
+        document.getElementById(
+            "editCardDelimiter"
+        ).value;
+
+    deck.pairCustom =
+        document.getElementById(
+            "editPairCustom"
+        ).value;
+
+    deck.cardCustom =
+        document.getElementById(
+            "editCardCustom"
+        ).value;
 
     deck.cards =
         cards.map(
@@ -2394,65 +2442,44 @@ function showNoDueCards(deck) {
         emptyArea.style.display = "";
     }
 }
+
 function showCurrentCard() {
     if (
-        currentCardIndex >=
-        studyQueue.length
+        currentCardIndex < 0 ||
+        currentCardIndex >= studyQueue.length
     ) {
         finishStudy();
         return;
     }
 
-    const item =
-        studyQueue[
-            currentCardIndex
-        ];
+    const card = studyQueue[currentCardIndex];
 
-    const card =
-        item.card;
+    const flashcard = document.getElementById("flashcard");
+    const frontText = document.getElementById("frontText");
+    const backText = document.getElementById("backText");
 
-    document.getElementById(
-        "frontText"
-    ).textContent =
-        card.front;
+    flashcard.classList.add("no-transition");
+    flashcard.classList.remove("flipped");
 
-    document.getElementById(
-        "backText"
-    ).textContent =
-        card.back;
+    void flashcard.offsetWidth;
 
-    document.getElementById(
-        "flashcard"
-    ).classList.remove(
-        "flipped"
-    );
+    frontText.textContent = card.front;
+    backText.textContent = card.back;
 
-    const remaining =
-        studyQueue.length -
-        currentCardIndex;
+    document.getElementById("studyPhase").textContent =
+        `フェーズ ${card.phase}`;
 
-    document.getElementById(
-        "progressBar"
-    ).style.width =
-        `${Math.min(
-            100,
-            (currentCardIndex /
-                Math.max(
-                    1,
-                    studyQueue.length
-                )) *
-                100
-        )}%`;
+    document.getElementById("studyMessage").textContent = "";
 
-    document.getElementById(
-        "studyPhase"
-    ).textContent =
-        `Phase ${card.phase}`;
+    const progress =
+        ((currentCardIndex + 1) / studyQueue.length) * 100;
 
-    document.getElementById(
-        "studyMessage"
-    ).textContent =
-        `${currentCardIndex + 1} / ${studyQueue.length}　残り ${remaining}枚`;
+    document.getElementById("progressBar").style.width =
+        `${progress}%`;
+
+    requestAnimationFrame(() => {
+        flashcard.classList.remove("no-transition");
+    });
 }
 
 function flipCard() {
@@ -2727,6 +2754,33 @@ bindEvent("deleteSelectedEditCardsButton", "click", deleteSelectedEditCards);
 bindEvent("confirmDeleteButton", "click", confirmDeleteDeck);
 bindEvent("cancelDeleteButton", "click", () => {
     document.getElementById("deleteModal").classList.remove("show");
+});
+document.addEventListener("keydown", (event) => {
+    if (
+        !document.getElementById("studyScreen").classList.contains("active") ||
+        studyQueue.length === 0
+    ) {
+        return;
+    }
+
+    if (event.repeat) {
+        return;
+    }
+
+    if (event.code === "Space") {
+        event.preventDefault();
+        flipCard();
+    }
+
+    if (event.key === "ArrowRight") {
+        event.preventDefault();
+        rateCard(true);
+    }
+
+    if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        rateCard(false);
+    }
 });
 
 const cardArea =
