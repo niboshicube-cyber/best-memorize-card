@@ -2452,7 +2452,8 @@ function showCurrentCard() {
         return;
     }
 
-    const card = studyQueue[currentCardIndex];
+    const item = studyQueue[currentCardIndex];
+    const card = item.card;
 
     const flashcard = document.getElementById("flashcard");
     const frontText = document.getElementById("frontText");
@@ -2465,22 +2466,6 @@ function showCurrentCard() {
 
     frontText.textContent = card.front;
     backText.textContent = card.back;
-
-    document.getElementById("studyPhase").textContent =
-        `フェーズ ${card.phase}`;
-
-    document.getElementById("studyMessage").textContent = "";
-
-    const progress =
-        ((currentCardIndex + 1) / studyQueue.length) * 100;
-
-    document.getElementById("progressBar").style.width =
-        `${progress}%`;
-
-    requestAnimationFrame(() => {
-        flashcard.classList.remove("no-transition");
-    });
-}
 
 function flipCard() {
     document.getElementById(
